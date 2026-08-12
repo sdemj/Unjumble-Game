@@ -373,7 +373,7 @@ function renderSubs(){
  $('#selectAllBtn').classList.toggle('selected',allSelected);
 }
 function toggleAllSubs(){if(!state.categoryChosen)return;const cat=currentCategory();if(state.selectedSubs.size===cat.subs.length)state.selectedSubs.clear();else state.selectedSubs=new Set(cat.subs.map(s=>s.id));renderSubs()}
-function goToCategory(){showScreen('categoryScreen');renderCategories()}
+function goToCategory(){if(BGM.on)bgmStart();showScreen('categoryScreen');renderCategories()}
 function backToCategory(){if(state.categoryChosen){showScreen('subScreen');renderSubs()}else{showScreen('categoryScreen');renderCategories()}}
 function goHome(){closeModal();showScreen('coverScreen')}
 function confirmHome(){openConfirm('처음으로 갈까요?','지금까지 한 게임은 끝나요.',goHome)}
@@ -453,6 +453,7 @@ function finishGame(){
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
 function openHelp(){
+ if(BGM.on)bgmStart();
  $('#modalTitle').textContent='How to Play 🦉';
  $('#modalBody').innerHTML=`<p>귀여운 단어 카드를 순서대로 놓아 영어 문장을 완성해요!</p>
  <ul class="how-list">
@@ -528,9 +529,13 @@ const BGM={on:true,el:null};
 function bgmEl(){if(!BGM.el){BGM.el=$('#bgmAudio');BGM.el.volume=0.35}return BGM.el}
 function bgmStart(){const a=bgmEl();if(!a||!BGM.on)return;a.play().catch(()=>{})}
 function bgmStop(){const a=bgmEl();if(!a)return;a.pause()}
-function toggleBgm(){BGM.on=!BGM.on;if(BGM.on)bgmStart();else bgmStop();updateUtilityButtons()}
-document.addEventListener('pointerdown',()=>{if(BGM.on)bgmStart()},{once:true});
-document.addEventListener('keydown',()=>{if(BGM.on)bgmStart()},{once:true});
+function toggleBgm(){
+ const a=bgmEl();
+ if(a&&a.paused){BGM.on=true;bgmStart()}else{BGM.on=false;bgmStop()}
+ updateUtilityButtons();
+}
+document.addEventListener('click',()=>{if(BGM.on)bgmStart()},{once:true});
+document.addEventListener('keyup',()=>{if(BGM.on)bgmStart()},{once:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)bgmEl()?.pause();else if(BGM.on)bgmStart()});
 
 renderCategories();updateUtilityButtons();
