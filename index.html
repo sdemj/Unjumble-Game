@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Unjumble Game</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 @font-face{font-family:'Hakgyoansim Boardmarker';src:url('Hakgyoansim_BoardmarkerR.ttf') format('truetype');font-display:swap}
 @font-face{font-family:'Hakgyoansim Poster';src:url('Hakgyoansim_PosterB.ttf') format('truetype');font-display:swap}
 :root{
   --ink:#4a3476; --pink:#ff4f9a; --purple:#a060ef; --blue:#56aee7; --yellow:#ffc83d;
   --cream:#fff7e7; --peach:#ffd8bd; --mint:#c9f4bc; --panel:#fffdf8; --shadow:0 14px 34px rgba(91,54,89,.18);
-  --title-font:'Hakgyoansim Poster','Jua',sans-serif;
-  --body-font:'Hakgyoansim Boardmarker','Jua','Malgun Gothic',sans-serif;
+  --title-font:'Hakgyoansim Poster',sans-serif;
+  --body-font:'Hakgyoansim Boardmarker',sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:linear-gradient(135deg,#ffe7d6,#fff6dc 48%,#f2dcff);color:var(--ink);font-family:var(--body-font);font-size:18px;overflow-x:hidden}
@@ -629,7 +628,8 @@ function matchesAnswer(userAnswer, targetSentence){return normalizeAnswer(userAn
 function reshuffleCurrent(){if(state.answered)return;let words=$$('#wordBoard .word-card').map(x=>x.textContent);let mixed=shuffle(words);const item=currentQuestion();while(mixed.join(' ')===item.sentence){mixed=shuffle(words)}renderWords(mixed)}
 
 function useHint(){if(state.hintUsed||state.answered)return;openConfirm('힌트를 볼까요? 💡',`점수가 3점 줄어듭니다.`,()=>{state.hintUsed=true;$('#hintBtn').disabled=true;$('#hintBox').innerHTML=`<b>뜻:</b> ${currentQuestion().hint}`;$('#hintBox').classList.add('show');closeModal()},'힌트 보기');}
-function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(2,10-state.attempts*3-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;const musicWasOn=BGM.on && !bgmEl().paused;bgmStop();const sound=$('#correctSound');sound.currentTime=0;sound.onended=null;sound.play().catch(()=>{});if(state.voiceOn){sound.onended=()=>{speak(item.sentence);if(musicWasOn)setTimeout(()=>bgmStart(),1200)}};openFeedback('멋지게 문장 퍼즐을 완성했어요. +'+earned+'점',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;playEffect('wrongSound');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`아깝다! 순서를 다시 살펴봐요. (${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<p>세 번 도전했습니다. 이번에는 이 문장을 기억해 주세요.</p><div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
+function playSentenceAfterCorrectSound(sentence){const resumeBgm=BGM.on;bgmStop();const sound=$('#correctSound');let started=false;const startSpeech=()=>{if(started)return;started=true;speak(sentence,resumeBgm)};sound.currentTime=0;sound.onended=startSpeech;const playback=sound.play();if(playback)playback.catch(startSpeech);}
+function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(2,10-state.attempts*3-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장 퍼즐을 완성했어요. +'+earned+'점',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;playEffect('wrongSound');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`아깝다! 순서를 다시 살펴봐요. (${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<p>세 번 도전했습니다. 이번에는 이 문장을 기억해 주세요.</p><div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function nextQuestion(){closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
@@ -647,7 +647,7 @@ $('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop').classList.contains('show')&&modalMode!=='answer')closeModal()});
 
 function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.currentTime=0;a.play()}catch(e){}}
-function speak(text){if(!state.voiceOn||!('speechSynthesis'in window))return;const a=bgmEl();const shouldResume=BGM.on&&a&&!a.paused;window.speechSynthesis.cancel();if(shouldResume)bgmStop();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;u.onend=()=>{if(BGM.on&&shouldResume){setTimeout(()=>{const current=bgmEl();if(current&&BGM.on){current.play().catch(()=>{})}},180)}};speechSynthesis.speak(u)}
+function speak(text,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!state.voiceOn||!('speechSynthesis'in window)){resume();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;u.onend=resume;u.onerror=resume;try{speechSynthesis.speak(u)}catch(e){resume()}}
 function toggleVoice(){state.voiceOn=!state.voiceOn;updateUtilityButtons()}
 function updateUtilityButtons(){$$('#sfx-toggle-icon,#sfx-toggle-icon-2,#sfx-toggle-icon-3,#sfx-toggle-icon-4,#sfx-toggle-icon-5').forEach(el=>{if(!el)return;el.className=state.sfxOn?'fa-solid fa-bell':'fa-solid fa-bell-slash';});$$('#music-toggle-icon,#music-toggle-icon-2,#music-toggle-icon-3,#music-toggle-icon-4,#music-toggle-icon-5').forEach(el=>{if(!el)return;el.className=BGM.on?'fa-solid fa-music':'fa-solid fa-volume-xmark';});$$('#fullscreen-toggle-icon,#fullscreen-toggle-icon-2,#fullscreen-toggle-icon-3,#fullscreen-toggle-icon-4,#fullscreen-toggle-icon-5').forEach(el=>{if(!el)return;el.className=document.fullscreenElement?'fa-solid fa-compress':'fa-solid fa-expand';});}
 async function toggleFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();updateUtilityButtons()}catch(e){}}
@@ -664,8 +664,8 @@ function bgmEl(){if(!BGM.el){BGM.el=$('#bgmAudio');BGM.el.volume=0.35}return BGM
 function bgmStart(){const a=bgmEl();if(!a||!BGM.on)return;a.play().catch(()=>{})}
 function bgmStop(){const a=bgmEl();if(!a)return;a.pause()}
 function toggleBgm(){BGM.on=!BGM.on;if(BGM.on)bgmStart();else bgmStop();updateUtilityButtons();}
-document.addEventListener('click',()=>{if(BGM.on&&!bgmEl().paused)bgmStart()},{once:false});
-document.addEventListener('keyup',()=>{if(BGM.on&&!bgmEl().paused)bgmStart()},{once:false});
+document.addEventListener('click',()=>{if(BGM.on)bgmStart()},{once:false});
+document.addEventListener('keyup',()=>{if(BGM.on)bgmStart()},{once:false});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)bgmEl()?.pause();else if(BGM.on)bgmStart()});
 window.addEventListener('load',()=>{BGM.on=true;bgmStart();updateUtilityButtons();});
 
