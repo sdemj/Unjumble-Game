@@ -7,21 +7,27 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+@font-face{font-family:'Hakgyoansim Boardmarker';src:url('Hakgyoansim_BoardmarkerR.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Hakgyoansim Poster';src:url('Hakgyoansim_PosterB.ttf') format('truetype');font-display:swap}
 :root{
   --ink:#4a3476; --pink:#ff4f9a; --purple:#a060ef; --blue:#56aee7; --yellow:#ffc83d;
   --cream:#fff7e7; --peach:#ffd8bd; --mint:#c9f4bc; --panel:#fffdf8; --shadow:0 14px 34px rgba(91,54,89,.18);
+  --title-font:'Hakgyoansim Poster','Jua',sans-serif;
+  --body-font:'Hakgyoansim Boardmarker','Jua','Malgun Gothic',sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:linear-gradient(135deg,#ffe7d6,#fff6dc 48%,#f2dcff);color:var(--ink);font-family:'Jua','Arial Rounded MT Bold','Malgun Gothic',sans-serif;overflow-x:hidden}
+html,body{margin:0;min-height:100%;background:linear-gradient(135deg,#ffe7d6,#fff6dc 48%,#f2dcff);color:var(--ink);font-family:var(--body-font);font-size:18px;overflow-x:hidden}
 button,input{font:inherit}
 button{border:0;cursor:pointer;color:inherit}
+body{font-size:18px}
+h1,h2,h3,h4,h5,h6{font-family:var(--title-font)}
 button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
 .screen{display:none;min-height:100vh;animation:screenIn .35s ease}
 .screen.active{display:flex;flex-direction:column}
 @keyframes screenIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-#coverScreen{align-items:center;justify-content:center;background:#ecd2bf;gap:clamp(6px,1.4vh,14px);padding:clamp(6px,1.2vh,12px) 10px;--coverNote:86px}
-.cover-frame{position:relative;flex:0 0 auto;width:min(calc(100vw - 20px),calc((100vh - var(--coverNote)) * 16 / 9));aspect-ratio:16/9;background:url('Unjumble Game 표지.png') center/cover no-repeat,linear-gradient(135deg,#ffe7d6,#fff6dc)}
+#coverScreen{align-items:center;justify-content:center;background:url('Unjumble Game 표지.png') center/cover no-repeat;gap:clamp(6px,1.4vh,14px);padding:0;--coverNote:86px;min-height:100vh;width:100%;position:relative}
+.cover-frame{position:absolute;inset:0;width:100%;height:100%;background:transparent;display:flex;align-items:center;justify-content:center}
 .cover-hotspot{position:absolute;background:transparent;border-radius:999px;color:transparent;overflow:hidden;cursor:pointer;border:0;box-shadow:none;outline:none}
 .cover-hotspot::before,.cover-hotspot::after{display:none!important;content:none!important}
 .cover-hotspot:hover,.cover-hotspot:focus-visible,.cover-hotspot:active{transform:none;filter:none;box-shadow:none;outline:none}
@@ -213,10 +219,8 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
           <button type="button" id="fullscreen-toggle-btn" class="nav-btn-circle" title="전체화면" aria-label="전체 화면" onclick="toggleFullscreen()"><i id="fullscreen-toggle-icon" class="fa-solid fa-expand"></i></button>
         </div>
       </div>
-      <div style="position:absolute;bottom:80px;left:50%;transform:translateX(-50%);display:flex;gap:20px;z-index:10">
-        <button class="primary-btn" type="button" onclick="openHelp()" style="font-size:24px;padding:20px 40px">📖 How to Play</button>
-        <button class="primary-btn" type="button" onclick="goToCategory()" style="font-size:24px;padding:20px 40px;background:linear-gradient(90deg,#a26af2,#ff66a8)">🚀 Game Start</button>
-      </div>
+      <button type="button" class="cover-hotspot help" aria-label="게임 방법" onclick="openHelp()"></button>
+      <button type="button" class="cover-hotspot start" aria-label="게임 시작" onclick="goToCategory()"></button>
     </div>
   </section>
 
@@ -241,7 +245,7 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
           <p>단어 카드를 끌어서 올바른<br>영어 문장을 완성해 보세요!</p>
         </div>
         <div class="snapshot" aria-label="예시 문장 카드">
-          <div class="snapshot-title">이런 식으로 놀아요!</div>
+          <div class="snapshot-title">이런 식으로 놓아요</div>
           <div class="word-row">
             <span class="mini-word palette-0" style="--rot:-2deg">She</span>
             <span class="mini-word palette-1" style="--rot:1deg">wears</span>
@@ -253,7 +257,7 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
       </section>
 
       <section class="panel">
-        <h2 class="section-title"><span class="step-badge">1</span> 주제를 선택하세요</h2>
+        <h2 class="section-title"><span class="step-badge">1</span> 원하는 주제를 선택하세요</h2>
         <div id="categoryGrid" class="category-grid"></div>
       </section>
     </main>
@@ -275,14 +279,14 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
     </div>
     <main class="page">
       <section class="panel">
-        <h2 class="section-title"><span class="step-badge">2</span> 세부 주제를 선택하세요</h2>
+        <h2 class="section-title"><span class="step-badge">2</span> 주제를 선택하세요</h2>
         <div class="sub-title-line">
           <div id="selectedCategoryBadge" class="sub-badge">카테고리</div>
         </div>
         <div class="sub-toolbar">
-          <div id="sentenceCount" class="counter">선택된 문장 0개</div>
+          <div id="sentenceCount" class="counter">0문장 선택됨</div>
         </div>
-        <button id="selectAllBtn" class="sub-btn select-all-btn" onclick="toggleAllSubs()">전체 선택</button>
+        <button id="selectAllBtn" class="sub-btn select-all-btn" onclick="toggleAllSubs()">전체 문장 선택하기</button>
         <div id="subGrid" class="sub-grid"></div>
         <div class="start-bar"><button id="startGameBtn" class="primary-btn" onclick="startGame()">게임 시작! 🚀</button></div>
       </section>
@@ -313,12 +317,11 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
         <div class="question-top">
           <div class="prompt">
             <p id="topicLine" class="topic-line">주제</p>
-            <h2>단어 카드를 끌어서 문장을 만들어요! 🎯</h2>
-            <p>올바른 순서로 배열한 후 <b>제출하기</b>를 눌러주세요.</p>
+            <h2>👇 카드를 드래그해 문장을 완성해요 👇</h2>
+            <p>올바른 순서로 배열한 후 제출하기를 눌러주세요.</p>
           </div>
         </div>
         <div>
-          <div class="answer-label">👇 마우스나 손가락으로 카드를 드래그해서 정렬하세요 👇</div>
           <div id="wordBoard" class="word-board" aria-label="단어 카드 정렬 영역"></div>
         </div>
         <div>
@@ -328,9 +331,8 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
         </div>
         <div class="game-actions">
           <button class="secondary-btn" onclick="reshuffleCurrent()">🔀 다시 섞기</button>
-          <button id="hintBtn" class="secondary-btn" onclick="useHint()">💡 힌트 (-3점)</button>
+          <button id="hintBtn" class="secondary-btn" onclick="useHint()">💡 힌트</button>
           <button id="submitBtn" class="primary-btn" onclick="submitAnswer()">✅ 제출하기!</button>
-          <div class="tiny-note">🎓 문제당 최대 3번 도전 가능 | 1차: 10점 · 2차: 7점 · 3차: 5점 | 힌트 사용 시 -3점</div>
         </div>
       </section>
     </main>
@@ -391,119 +393,193 @@ button:focus-visible{outline:5px solid rgba(76,63,152,.38);outline-offset:3px}
 <audio id="bgmAudio" src="fluxsound-cheerful-upbeat-kids-486631.mp3" loop preload="auto"></audio>
 <script>
 const DATA=[
-{"id":"daily","name":"일상","emoji":"🌅","subs":[
-{"id":"clothing","name":"옷","emoji":"👕","questions":[
-{"sentence":"She wears a red hat.","hint":"그녀는 빨간 모자를 쓰고 있다.","scene":"👒❤️"},
-{"sentence":"I want the blue pants.","hint":"나는 파란 바지를 원한다.","scene":"👖💙"},
-{"sentence":"He put on a white shirt.","hint":"그는 흰색 셔츠를 입었다.","scene":"👔⚪"},
-{"sentence":"The black shoes are mine.","hint":"검은색 신발은 내 것이다.","scene":"👞⚫"},
-{"sentence":"She has a yellow dress.","hint":"그녀는 노란 드레스를 입고 있다.","scene":"👗💛"},
-{"sentence":"Do you like this green jacket?","hint":"이 초록 자켓을 좋아하나요?","scene":"🧥💚"}
-]},
-{"id":"activities","name":"활동","emoji":"⚽","questions":[
-{"sentence":"We play badminton on Tuesday.","hint":"우리는 화요일에 배드민턴을 한다.","scene":"🏸📅"},
-{"sentence":"Can you play table tennis?","hint":"탁구를 할 수 있어요?","scene":"🏓❓"},
-{"sentence":"Let's play table tennis.","hint":"탁구를 하자.","scene":"🏓😄"},
-{"sentence":"He goes to the library.","hint":"그는 도서관에 간다.","scene":"📚🏃"},
-{"sentence":"Today is Monday.","hint":"오늘은 월요일이다.","scene":"📅1️⃣"},
-{"sentence":"I like to swim in summer.","hint":"나는 여름에 수영하는 것을 좋아한다.","scene":"🏊☀️"}
-]}
-]},
-{"id":"food","name":"음식","emoji":"🍔","subs":[
-{"id":"fruit","name":"과일","emoji":"🍎","questions":[
-{"sentence":"I like cake.","hint":"나는 케이크를 좋아한다.","scene":"🍰😋"},
-{"sentence":"Do you like apples?","hint":"사과를 좋아하나요?","scene":"🍎❓"},
-{"sentence":"She eats a banana.","hint":"그녀는 바나나를 먹는다.","scene":"🍌😊"},
-{"sentence":"The orange is delicious.","hint":"그 오렌지는 맛있다.","scene":"🍊😋"},
-{"sentence":"Would you like grapes?","hint":"포도를 원하시나요?","scene":"🍇❓"},
-{"sentence":"I eat watermelon in summer.","hint":"나는 여름에 수박을 먹는다.","scene":"🍉☀️"}
-]},
-{"id":"meal","name":"식사","emoji":"🥘","questions":[
-{"sentence":"What is for dinner?","hint":"저녁은 뭐예요?","scene":"🍽️❓"},
-{"sentence":"I eat rice and soup.","hint":"나는 밥과 국을 먹는다.","scene":"🍚🥣"},
-{"sentence":"Do you want bread?","hint":"빵을 원하나요?","scene":"🍞❓"},
-{"sentence":"Pizza is my favorite food.","hint":"피자는 내 가장 좋아하는 음식이다.","scene":"🍕💕"},
-{"sentence":"She likes spicy food.","hint":"그녀는 매운 음식을 좋아한다.","scene":"🌶️😋"},
-{"sentence":"We have breakfast at seven.","hint":"우리는 7시에 아침을 먹는다.","scene":"🍳🕖"}
-]}
-]},
-{"id":"time","name":"시간","emoji":"⏰","subs":[
-{"id":"day","name":"요일","emoji":"📅","questions":[
-{"sentence":"What day is it today?","hint":"오늘은 무슨 요일인가요?","scene":"📅❓"},
-{"sentence":"Monday is the first day.","hint":"월요일은 첫 번째 날이다.","scene":"1️⃣📅"},
-{"sentence":"We have class on Wednesday.","hint":"우리는 수요일에 수업이 있다.","scene":"🎓📅"},
-{"sentence":"Friday is my favorite day.","hint":"금요일이 내가 가장 좋아하는 날이다.","scene":"🎉📅"},
-{"sentence":"Saturday and Sunday are weekends.","hint":"토요일과 일요일은 주말이다.","scene":"🛏️😴"},
-{"sentence":"I go to school on weekdays.","hint":"나는 평일에 학교에 간다.","scene":"🏫📚"}
-]},
-{"id":"season","name":"계절","emoji":"🌞","questions":[
-{"sentence":"Summer is very hot.","hint":"여름은 매우 덥다.","scene":"☀️🔥"},
-{"sentence":"It snows in winter.","hint":"겨울에 눈이 온다.","scene":"❄️⛄"},
-{"sentence":"Spring flowers are beautiful.","hint":"봄꽃은 아름답다.","scene":"🌸🌺"},
-{"sentence":"Fall leaves are colorful.","hint":"가을 잎은 알록달록하다.","scene":"🍂🎨"},
-{"sentence":"What is your favorite season?","hint":"당신의 가장 좋아하는 계절이 뭐예요?","scene":"❓🌍"},
-{"sentence":"We swim in summer.","hint":"우리는 여름에 수영한다.","scene":"🏊☀️"}
-]}
-]},
-{"id":"animal","name":"동물","emoji":"🐶","subs":[
-{"id":"pet","name":"반려동물","emoji":"🐱","questions":[
-{"sentence":"I have a dog and a cat.","hint":"나는 개와 고양이를 가지고 있다.","scene":"🐕🐈"},
-{"sentence":"The puppy is cute.","hint":"그 강아지는 귀엽다.","scene":"🐶💕"},
-{"sentence":"Does your family have a pet?","hint":"당신의 가족이 반려동물을 가지고 있나요?","scene":"🏠❓"},
-{"sentence":"My rabbit eats vegetables.","hint":"내 토끼는 야채를 먹는다.","scene":"🐰🥬"},
-{"sentence":"The hamster is small.","hint":"그 햄스터는 작다.","scene":"🐹👌"},
-{"sentence":"Cats sleep a lot.","hint":"고양이들은 많이 잔다.","scene":"🐱😴"}
-]},
-{"id":"wild","name":"야생동물","emoji":"🦁","questions":[
-{"sentence":"Lions are strong.","hint":"사자들은 강하다.","scene":"🦁💪"},
-{"sentence":"Elephants are big animals.","hint":"코끼리는 큰 동물이다.","scene":"🐘🦣"},
-{"sentence":"The monkey is funny.","hint":"그 원숭이는 재미있다.","scene":"🐵😄"},
-{"sentence":"Penguins live in cold places.","hint":"펭귄은 추운 곳에 산다.","scene":"🐧❄️"},
-{"sentence":"The giraffe has a long neck.","hint":"그 기린은 긴 목을 가지고 있다.","scene":"🦒🔺"},
-{"sentence":"Do you like polar bears?","hint":"북극곰을 좋아하나요?","scene":"🐻‍❄️❓"}
-]}
-]},
-{"id":"family","name":"가족","emoji":"👨‍👩‍👧‍👦","subs":[
-{"id":"relation","name":"관계","emoji":"❤️","questions":[
-{"sentence":"My mother likes cooking.","hint":"내 어머니는 요리를 좋아한다.","scene":"👩‍🍳💕"},
-{"sentence":"My father works hard.","hint":"내 아버지는 열심히 일한다.","scene":"👨‍💼💼"},
-{"sentence":"I have two brothers.","hint":"나는 형제가 두 명이다.","scene":"👦👦2️⃣"},
-{"sentence":"My sister is younger than me.","hint":"내 여동생은 나보다 더 어리다.","scene":"👧👧📏"},
-{"sentence":"Do you have grandparents?","hint":"당신은 할아버지할머니가 있나요?","scene":"👴👵❓"},
-{"sentence":"My family is very kind.","hint":"내 가족은 매우 친절하다.","scene":"👨‍👩‍👧‍👦💚"}
-]},
-{"id":"house","name":"집","emoji":"🏠","questions":[
-{"sentence":"My room is clean.","hint":"내 방은 깨끗하다.","scene":"🛏️✨"},
-{"sentence":"There are many books in the library.","hint":"도서관에는 많은 책들이 있다.","scene":"📚📚"},
-{"sentence":"We eat in the kitchen.","hint":"우리는 부엌에서 먹는다.","scene":"🍽️👨‍🍳"},
-{"sentence":"The bathroom is upstairs.","hint":"욕실은 위층에 있다.","scene":"🚿🪜"},
-{"sentence":"I watch TV in the living room.","hint":"나는 거실에서 TV를 본다.","scene":"📺🛋️"},
-{"sentence":"Our house has a garden.","hint":"우리 집은 정원을 가지고 있다.","scene":"🏠🌷"}
-]}
-]},
-{"id":"school","name":"학교","emoji":"🎓","subs":[
-{"id":"classroom","name":"교실","emoji":"📚","questions":[
-{"sentence":"I like my English teacher.","hint":"나는 내 영어 선생님을 좋아한다.","scene":"👨‍🏫💕"},
-{"sentence":"There are thirty students in our class.","hint":"우리 반에는 30명의 학생이 있다.","scene":"👦👧x30"},
-{"sentence":"We have English class at nine.","hint":"우리는 9시에 영어 수업이 있다.","scene":"🔤🕘"},
-{"sentence":"Please open your English book.","hint":"영어책을 펴 주세요.","scene":"📖✋"},
-{"sentence":"Raise your hand, please.","hint":"손을 들어 주세요.","scene":"✋📚"},
-{"sentence":"Put your pencil on the desk.","hint":"연필을 책상 위에 놓으세요.","scene":"✏️📏"}
-]},
-{"id":"subject","name":"과목","emoji":"🔬","questions":[
-{"sentence":"I like math and science.","hint":"나는 수학과 과학을 좋아한다.","scene":"➕🔬"},
-{"sentence":"English class is fun today.","hint":"오늘 영어 수업은 재미있다.","scene":"🔤😄"},
-{"sentence":"Do you study history?","hint":"당신은 역사를 공부하나요?","scene":"📜❓"},
-{"sentence":"Music is my favorite subject.","hint":"음악은 내가 가장 좋아하는 과목이다.","scene":"🎵💕"},
-{"sentence":"We have geography after lunch.","hint":"점심 후에 지리 수업이 있다.","scene":"🌍🍴"},
-{"sentence":"Art class is on Friday.","hint":"미술 수업은 금요일이다.","scene":"🎨📅"}
-]}
-]}
+  {"id":"greeting-intro","name":"인사와 소개","emoji":"","subs":[
+    {"id":"first-greeting","name":"첫인사","emoji":"","questions":[
+      {"sentence":"Hello, how are you today?","hint":"안녕, 오늘 기분이 어때?","scene":""},
+      {"sentence":"Nice to meet you.","hint":"만나서 반가워.","scene":""},
+      {"sentence":"Good morning, my friend.","hint":"좋은 아침이야, 친구야.","scene":""},
+      {"sentence":"Welcome to our English class.","hint":"영어 수업에 온 것을 환영해요.","scene":""}
+    ]},
+    {"id":"self-introduction","name":"자기소개","emoji":"","questions":[
+      {"sentence":"My name is Jina.","hint":"내 이름은 Jina야.","scene":""},
+      {"sentence":"I am ten years old.","hint":"난 10살이야.","scene":""},
+      {"sentence":"I live in Busan.","hint":"나는 부산에 살아.","scene":""},
+      {"sentence":"I am in fifth grade.","hint":"나는 5학년이야.","scene":""}
+    ]},
+    {"id":"feeling","name":"기분","emoji":"","questions":[
+      {"sentence":"I feel happy today.","hint":"난 오늘 행복해.","scene":""},
+      {"sentence":"Are you tired now?","hint":"지금 피곤해?","scene":""},
+      {"sentence":"He is very excited today.","hint":"그는 오늘 매우 신났어.","scene":""},
+      {"sentence":"She feels sad.","hint":"그녀는 슬퍼.","scene":""}
+    ]}
+  ]},
+  {"id":"school-life","name":"학교생활","emoji":"","subs":[
+    {"id":"classroom-expressions","name":"교실 표현","emoji":"","questions":[
+      {"sentence":"Please open your English book.","hint":"영어책을 펴 주세요.","scene":""},
+      {"sentence":"Please close the classroom door.","hint":"교실 문을 닫아주세요.","scene":""},
+      {"sentence":"Put your pencil on the desk.","hint":"연필을 책상 위에 놓으세요.","scene":""},
+      {"sentence":"Raise your hand, please.","hint":"손을 들어주세요.","scene":""}
+    ]},
+    {"id":"subjects","name":"교과목","emoji":"","questions":[
+      {"sentence":"I like math and science.","hint":"나는 수학과 과학을 좋아해.","scene":""},
+      {"sentence":"English class is fun today.","hint":"오늘 영어 수업이 재미있어.","scene":""},
+      {"sentence":"We have music on Friday.","hint":"금요일에 음악 수업이 있어.","scene":""},
+      {"sentence":"My favorite subject is art.","hint":"내가 가장 좋아하는 과목은 미술이야.","scene":""}
+    ]},
+    {"id":"school-rules","name":"학교 규칙","emoji":"","questions":[
+      {"sentence":"Please walk in the hallway.","hint":"복도에서는 걸어다니세요.","scene":""},
+      {"sentence":"Do not run in class.","hint":"교실에서 뛰면 안 돼요.","scene":""},
+      {"sentence":"Listen to your teacher carefully.","hint":"선생님 말씀을 잘 들어요.","scene":""},
+      {"sentence":"Be kind to your friends.","hint":"친구에게 친절하게 대해요.","scene":""}
+    ]}
+  ]},
+  {"id":"daily-life","name":"일상생활","emoji":"","subs":[
+    {"id":"morning","name":"아침","emoji":"","questions":[
+      {"sentence":"I get up at seven.","hint":"나는 일곱 시에 일어나요.","scene":""},
+      {"sentence":"I wash my face every morning.","hint":"매일 아침 세수를 해요.","scene":""},
+      {"sentence":"I eat breakfast with my family.","hint":"가족과 함께 아침을 먹어요.","scene":""},
+      {"sentence":"I go to school early.","hint":"학교에 일찍 가요.","scene":""}
+    ]},
+    {"id":"school-routine","name":"하루 일과","emoji":"","questions":[
+      {"sentence":"I do my homework after school.","hint":"방과 후에 숙제를 해요.","scene":""},
+      {"sentence":"We clean the room together.","hint":"우리 함께 방을 청소해요.","scene":""},
+      {"sentence":"I read a book every day.","hint":"나는 매일 책을 읽어요.","scene":""},
+      {"sentence":"She drinks water after lunch.","hint":"그녀는 점심을 먹고 나서 물을 마셔요.","scene":""}
+    ]},
+    {"id":"after-school","name":"방과 후","emoji":"","questions":[
+      {"sentence":"I play soccer with friends.","hint":"나는 친구들과 축구를 해요.","scene":""},
+      {"sentence":"He goes to the library.","hint":"그는 도서관에 가요.","scene":""},
+      {"sentence":"We watch TV after dinner.","hint":"우리는 저녁 식사 후에 텔레비전을 봐요.","scene":""},
+      {"sentence":"They ride bikes in the park.","hint":"그들은 공원에서 자전거를 타요.","scene":""}
+    ]}
+  ]},
+  {"id":"family-friends","name":"가족과 친구","emoji":"","subs":[
+    {"id":"our-family","name":"우리 가족","emoji":"","questions":[
+      {"sentence":"This is my little sister.","hint":"이 아이는 내 여동생이에요.","scene":""},
+      {"sentence":"My father cooks dinner today.","hint":"아빠가 오늘 저녁을 요리해요.","scene":""},
+      {"sentence":"I love my family very much.","hint":"나는 우리 가족을 아주 사랑해요.","scene":""},
+      {"sentence":"We visit Grandma on Sunday.","hint":"우리는 일요일에 할머니를 찾아뵈어요.","scene":""}
+    ]},
+    {"id":"friends","name":"친구","emoji":"","questions":[
+      {"sentence":"Mina is my best friend.","hint":"미나는 나의 가장 친한 친구예요.","scene":""},
+      {"sentence":"We play games after school.","hint":"우리는 방과 후에 게임을 해요.","scene":""},
+      {"sentence":"My friend helps me often.","hint":"내 친구는 자주 나를 도와줘요.","scene":""},
+      {"sentence":"Let's study English together.","hint":"우리 함께 영어를 공부해요.","scene":""}
+    ]},
+    {"id":"appearance","name":"생김새","emoji":"","questions":[
+      {"sentence":"He has short black hair.","hint":"그는 짧은 검은 머리예요.","scene":""},
+      {"sentence":"She wears a red hat.","hint":"그녀는 빨간 모자를 써요.","scene":""},
+      {"sentence":"My brother is very tall.","hint":"내 남동생은 키가 아주 커요.","scene":""},
+      {"sentence":"The baby has big eyes.","hint":"아기는 큰 눈을 가지고 있어요.","scene":""}
+    ]}
+  ]},
+  {"id":"food-shopping","name":"음식과 쇼핑","emoji":"","subs":[
+    {"id":"favorite-food","name":"좋아하는 음식","emoji":"","questions":[
+      {"sentence":"I like apples and bananas.","hint":"나는 사과와 바나나를 좋아해요.","scene":""},
+      {"sentence":"This pizza tastes really good.","hint":"이 피자는 정말 맛있어요.","scene":""},
+      {"sentence":"My favorite food is bibimbap.","hint":"내가 가장 좋아하는 음식은 비빔밥이에요.","scene":""},
+      {"sentence":"We need milk and bread.","hint":"우리는 우유와 빵이 필요해요.","scene":""}
+    ]},
+    {"id":"restaurant","name":"식당","emoji":"","questions":[
+      {"sentence":"Can I have some water?","hint":"물을 주실 수 있으실까요?","scene":""},
+      {"sentence":"I would like chicken, please.","hint":"치킨을 주문하고 싶어요.","scene":""},
+      {"sentence":"The soup is too hot.","hint":"수프가 너무 뜨거워요.","scene":""},
+      {"sentence":"Here is your lunch menu.","hint":"여기 점심 메뉴가 있어요.","scene":""}
+    ]},
+    {"id":"shopping","name":"쇼핑","emoji":"","questions":[
+      {"sentence":"How much is this shirt?","hint":"이 셔츠는 얼마입니까?","scene":""},
+      {"sentence":"I want the blue pants.","hint":"파란색 바지를 원해요.","scene":""},
+      {"sentence":"Please give me two apples.","hint":"사과 두 개 주세요.","scene":""},
+      {"sentence":"This bag is very cheap.","hint":"이 가방은 아주 싸요.","scene":""}
+    ]}
+  ]},
+  {"id":"time-date","name":"시간과 날짜","emoji":"","subs":[
+    {"id":"time","name":"시간","emoji":"","questions":[
+      {"sentence":"What time is it now?","hint":"지금 몇 시예요?","scene":""},
+      {"sentence":"It is three o'clock now.","hint":"지금은 세시입니다.","scene":""},
+      {"sentence":"School starts at nine o'clock.","hint":"학교는 아홉 시에 시작해요.","scene":""},
+      {"sentence":"I go home at four.","hint":"나는 네 시에 집에 가요.","scene":""}
+    ]},
+    {"id":"weekdays","name":"요일","emoji":"","questions":[
+      {"sentence":"What day is it today?","hint":"오늘은 무슨 요일인가요?","scene":""},
+      {"sentence":"Today is Monday.","hint":"오늘은 월요일이에요.","scene":""},
+      {"sentence":"We have art on Wednesday.","hint":"수요일에 미술 수업이 있어요.","scene":""},
+      {"sentence":"We play badminton on Tuesday.","hint":"우리는 화요일에 배드민턴을 쳐요.","scene":""}
+    ]},
+    {"id":"birthday","name":"생일","emoji":"","questions":[
+      {"sentence":"When is your birthday?","hint":"네 생일이 언제니?","scene":""},
+      {"sentence":"My birthday is in May.","hint":"내 생일은 5월이에요.","scene":""},
+      {"sentence":"Happy birthday to you!","hint":"생일 축하해!","scene":""},
+      {"sentence":"I have a party today.","hint":"오늘 파티가 있어요.","scene":""}
+    ]}
+  ]},
+  {"id":"weather-season","name":"날씨와 계절","emoji":"","subs":[
+    {"id":"today-weather","name":"오늘 날씨","emoji":"","questions":[
+      {"sentence":"How is the weather today?","hint":"오늘 날씨가 어때요?","scene":""},
+      {"sentence":"It is sunny and warm.","hint":"햇볕이 쨍쨍하고 따뜻해요.","scene":""},
+      {"sentence":"It's raining a lot","hint":"비가 많이 와요.","scene":""},
+      {"sentence":"The wind is very strong.","hint":"바람이 아주 세게 불어요.","scene":""}
+    ]},
+    {"id":"season","name":"계절","emoji":"","questions":[
+      {"sentence":"Spring is my favorite season.","hint":"봄은 내가 가장 좋아하는 계절이에요.","scene":""},
+      {"sentence":"It is very cold in winter.","hint":"겨울에는 아주 추워요.","scene":""},
+      {"sentence":"We swim in the summer.","hint":"우리는 여름에 수영해요.","scene":""},
+      {"sentence":"Leaves fall down in fall.","hint":"가을에는 나뭇잎이 떨어져요.","scene":""}
+    ]},
+    {"id":"weather-clothes","name":"날씨와 옷","emoji":"","questions":[
+      {"sentence":"Put on your warm jacket.","hint":"따뜻한 재킷을 입어요.","scene":""},
+      {"sentence":"I need an umbrella today.","hint":"오늘은 우산이 필요해요.","scene":""},
+      {"sentence":"She wears boots in winter.","hint":"그녀는 겨울에 부츠를 신어요.","scene":""},
+      {"sentence":"Take off your wet shoes.","hint":"젖은 신발을 벗어요.","scene":""}
+    ]}
+  ]},
+  {"id":"hobby-sports","name":"취미와 운동","emoji":"","subs":[
+    {"id":"hobby","name":"취미","emoji":"","questions":[
+      {"sentence":"I like drawing cute animals.","hint":"나는 귀여운 동물 그리기를 좋아해요.","scene":""},
+      {"sentence":"She enjoys reading comic books.","hint":"그녀는 만화책 읽기를 즐겨요.","scene":""},
+      {"sentence":"We collect pretty stickers together.","hint":"우리 함께 예쁜 스티커를 모아요.","scene":""},
+      {"sentence":"He plays the piano well.","hint":"그는 피아노를 잘 쳐요.","scene":""}
+    ]},
+    {"id":"exercise","name":"운동","emoji":"","questions":[
+      {"sentence":"Let's play table tennis.","hint":"같이 탁구 치자.","scene":""},
+      {"sentence":"I practice soccer every Saturday.","hint":"나는 매주 토요일에 축구를 연습해요.","scene":""},
+      {"sentence":"We run around the playground.","hint":"우리는 운동장을 달려요.","scene":""},
+      {"sentence":"My team won the game.","hint":"우리 팀이 경기에서 이겼어요.","scene":""}
+    ]},
+    {"id":"can-do","name":"할 수 있어요","emoji":"","questions":[
+      {"sentence":"I can swim very fast.","hint":"나는 아주 빨리 수영할 수 있어요.","scene":""},
+      {"sentence":"Can you ride a bike?","hint":"자전거를 탈 수 있나요?","scene":""},
+      {"sentence":"She can sing English songs.","hint":"그녀는 영어 노래를 부를 수 있어요.","scene":""},
+      {"sentence":"He cannot jump very high.","hint":"그는 아주 높이 뛸 수 없어요.","scene":""}
+    ]}
+  ]},
+  {"id":"place-travel","name":"장소와 이동","emoji":"","subs":[
+    {"id":"various-places","name":"여러 장소","emoji":"","questions":[
+      {"sentence":"Where is the school library?","hint":"학교 도서관이 어디에 있나요?","scene":""},
+      {"sentence":"The bank is near here.","hint":"은행은 여기 가까이에 있어요.","scene":""},
+      {"sentence":"We are at the museum.","hint":"우리는 박물관에 있어요.","scene":""},
+      {"sentence":"My house is behind the park.","hint":"우리 집은 공원 뒤에 있어요.","scene":""}
+    ]},
+    {"id":"directions","name":"길 안내","emoji":"","questions":[
+      {"sentence":"Go straight and turn left.","hint":"앞으로 쭉 가서 왼쪽으로 도세요.","scene":""},
+      {"sentence":"Turn right at the corner.","hint":"모퉁이에서 오른쪽으로 도세요.","scene":""},
+      {"sentence":"The store is across from school.","hint":"가게는 학교 맞은편에 있어요.","scene":""},
+      {"sentence":"Walk two blocks, please.","hint":"두 블록 걸어가세요.","scene":""}
+    ]},
+    {"id":"transportation","name":"교통수단","emoji":"","questions":[
+      {"sentence":"I go by school bus.","hint":"나는 통학 버스를 타고 가요.","scene":""},
+      {"sentence":"We take the subway downtown.","hint":"우리는 지하철을 타고 시내에 가요.","scene":""},
+      {"sentence":"My father drives to work.","hint":"아빠는 운전해서 일하러 가요.","scene":""},
+      {"sentence":"They ride the train together.","hint":"그들은 함께 기차를 타요.","scene":""}
+    ]}
+  ]}
 ];
 
 const state={categoryId:DATA[0].id,categoryChosen:false,selectedSubs:new Set(),questions:[],round:0,score:0,correctCount:0,attempts:0,hintUsed:false,answered:false,review:[],voiceOn:true,sfxOn:true};
 const navHistory=[],navFuture=[];
 let dragState=null;
+let modalMode=null;
+const BGM={on:true,el:null};
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -530,7 +606,7 @@ function updateNavButtons(){}
 
 function renderCategories(){const grid=$('#categoryGrid');grid.innerHTML='';DATA.forEach(cat=>{const selected=state.categoryChosen&&cat.id===state.categoryId;const b=document.createElement('button');b.className='category-btn'+(selected?' selected':'');b.innerHTML=`<span class="emoji">${cat.emoji}</span><span>${cat.name}</span>`;b.onclick=()=>selectCategory(cat.id);grid.appendChild(b)});}
 function selectCategory(id){state.categoryId=id;state.categoryChosen=true;state.selectedSubs=new Set();showScreen('subScreen');renderSubs();}
-function renderSubs(){if(!state.categoryChosen)return;const grid=$('#subGrid');grid.innerHTML='';const cat=currentCategory();$('#selectedCategoryBadge').textContent=`선택: ${cat.emoji} ${cat.name}`;cat.subs.forEach(sub=>{const b=document.createElement('button');b.className='sub-btn'+(state.selectedSubs.has(sub.id)?' selected':'');b.innerHTML=`${sub.emoji} ${sub.name} <small class="sub-count">(${sub.questions.length})</small>`;b.onclick=()=>{hideSubPeek();state.selectedSubs.has(sub.id)?state.selectedSubs.delete(sub.id):state.selectedSubs.add(sub.id);renderSubs()};b.addEventListener('mouseenter',()=>showSubPeek(b,sub));b.addEventListener('mouseleave',scheduleHidePeek);grid.appendChild(b)});const count=cat.subs.filter(s=>state.selectedSubs.has(s.id)).reduce((n,s)=>n+s.questions.length,0);const totalCount=cat.subs.reduce((n,s)=>n+s.questions.length,0);$('#sentenceCount').textContent=`선택 ${count}개 / ${totalCount}개`;$('#startGameBtn').disabled=count===0;const allSelected=state.selectedSubs.size===cat.subs.length;$('#selectAllBtn').textContent=`${allSelected?'전체 해제':'전체 선택'} (${totalCount})`;$('#selectAllBtn').classList.toggle('selected',allSelected);}
+function renderSubs(){if(!state.categoryChosen)return;const grid=$('#subGrid');grid.innerHTML='';const cat=currentCategory();$('#selectedCategoryBadge').textContent=`${cat.emoji} ${cat.name}`;cat.subs.forEach(sub=>{const b=document.createElement('button');b.className='sub-btn'+(state.selectedSubs.has(sub.id)?' selected':'');b.innerHTML=`${sub.emoji} ${sub.name} <small class="sub-count">(${sub.questions.length})</small>`;b.onclick=()=>{hideSubPeek();state.selectedSubs.has(sub.id)?state.selectedSubs.delete(sub.id):state.selectedSubs.add(sub.id);renderSubs()};b.addEventListener('mouseenter',()=>showSubPeek(b,sub));b.addEventListener('mouseleave',scheduleHidePeek);grid.appendChild(b)});const count=cat.subs.filter(s=>state.selectedSubs.has(s.id)).reduce((n,s)=>n+s.questions.length,0);const totalCount=cat.subs.reduce((n,s)=>n+s.questions.length,0);$('#sentenceCount').textContent=`${count}문장 선택됨`;$('#startGameBtn').disabled=count===0;const allSelected=state.selectedSubs.size===cat.subs.length;$('#selectAllBtn').textContent=`${allSelected?'전체 문장 선택 취소':'전체 문장 선택하기'} (${totalCount})`;$('#selectAllBtn').classList.toggle('selected',allSelected);}
 function toggleAllSubs(){if(!state.categoryChosen)return;const cat=currentCategory();if(state.selectedSubs.size===cat.subs.length)state.selectedSubs.clear();else state.selectedSubs=new Set(cat.subs.map(s=>s.id));renderSubs();}
 function goToCategory(){if(BGM.on)bgmStart();showScreen('categoryScreen');renderCategories();}
 function backToCategory(){if(state.categoryChosen){showScreen('subScreen');renderSubs()}else{showScreen('categoryScreen');renderCategories()}}
@@ -538,9 +614,9 @@ function goHome(){closeModal();showScreen('coverScreen')}
 function confirmHome(){openConfirm('처음으로 갈까요?','진행 중인 게임이 끝납니다.',goHome)}
 function confirmBackToCategory(){openConfirm('주제를 바꿀까요?','현재 라운드는 끝나고 점수는 저장됩니다.',backToCategory)}
 
-function startGame(){const cat=currentCategory();let pool=[];cat.subs.filter(s=>state.selectedSubs.has(s.id)).forEach(s=>s.questions.forEach(item=>pool.push({...item,subName:s.name,catName:cat.name})));state.questions=shuffle(pool).slice(0,10);state.round=0;state.score=0;state.correctCount=0;state.review=[];showScreen('gameScreen');renderQuestion();}
+function startGame(){const cat=currentCategory();let pool=[];cat.subs.filter(s=>state.selectedSubs.has(s.id)).forEach(s=>s.questions.forEach(item=>pool.push({...item,subName:s.name,catName:cat.name})));const maxQuestions=Math.min(pool.length,10);state.questions=shuffle(pool).slice(0,maxQuestions);state.round=0;state.score=0;state.correctCount=0;state.review=[];showScreen('gameScreen');renderQuestion();}
 function replaySame(){startGame()}
-function renderQuestion(){state.attempts=0;state.hintUsed=false;state.answered=false;const item=currentQuestion();$('#roundChip').textContent=`${state.round+1} / ${state.questions.length}`;$('#scoreChip').textContent=`⭐ ${state.score}점`;$('#progressBar').style.width=`${(state.round/state.questions.length)*100}%`;$('#topicLine').textContent=`${item.catName} · ${item.subName}`;$('#hintBox').classList.remove('show');$('#hintBox').textContent='';$('#answerReveal').classList.remove('show');$('#answerReveal').innerHTML='';$('#feedbackToast').textContent='';$('#hintBtn').disabled=false;$('#submitBtn').disabled=false;let words=item.sentence.split(/\s+/);let mixed=shuffle(words);if(mixed.join(' ')===words.join(' ')&&mixed.length>1)mixed=[...mixed.slice(1),mixed[0]];renderWords(mixed);}
+function renderQuestion(){state.attempts=0;state.hintUsed=false;state.answered=false;const item=currentQuestion();$('#roundChip').textContent=`${state.round+1} / ${state.questions.length}`;$('#scoreChip').textContent=`⭐ ${state.score}점`;$('#progressBar').style.width=`${(state.round/state.questions.length)*100}%`;$('#topicLine').textContent=`${item.catName} · ${item.subName}`;$('#hintBox').classList.remove('show');$('#hintBox').textContent='';$('#answerReveal').classList.remove('show');$('#answerReveal').innerHTML='';$('#feedbackToast').textContent='';$('#hintBtn').disabled=false;$('#submitBtn').disabled=false;let words=item.sentence.split(/\s+/);let mixed=shuffle(words);while(mixed.join(' ')===item.sentence){mixed=shuffle(words);}renderWords(mixed);}
 function renderWords(words){const board=$('#wordBoard');board.innerHTML='';words.forEach((word,i)=>{const card=document.createElement('div');card.className=`word-card palette-${i%9}`;card.textContent=word;card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label',`${word}`);card.addEventListener('pointerdown',startPointerDrag);card.addEventListener('keydown',keyboardMove);board.appendChild(card);});}
 function keyboardMove(e){if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const el=e.currentTarget;if(e.key==='ArrowLeft'&&el.previousElementSibling)el.parentElement.insertBefore(el,el.previousElementSibling);if(e.key==='ArrowRight'&&el.nextElementSibling)el.parentElement.insertBefore(el.nextElementSibling,el);el.focus()}
 function startPointerDrag(e){if(state.answered||e.button>0)return;e.preventDefault();const el=e.currentTarget;const r=el.getBoundingClientRect();const ghost=el.cloneNode(true);ghost.classList.add('drag-ghost');ghost.style.width=r.width+'px';ghost.style.height=r.height+'px';document.body.appendChild(ghost);el.classList.add('dragging');dragState={el,ghost,dx:e.clientX-r.left,dy:e.clientY-r.top};moveGhost(e);document.addEventListener('pointermove',pointerMove,{passive:false});document.addEventListener('pointerup',endPointerDrag,{once:true});document.addEventListener('pointercancel',endPointerDrag,{once:true});}
@@ -548,48 +624,50 @@ function moveGhost(e){if(!dragState)return;dragState.ghost.style.left=(e.clientX
 function pointerMove(e){if(!dragState)return;e.preventDefault();moveGhost(e);dragState.ghost.style.display='none';const under=document.elementFromPoint(e.clientX,e.clientY);dragState.ghost.style.display='block';const target=under&&under.closest('.word-card');const board=$('#wordBoard');if(target&&target!==dragState.el){const r=target.getBoundingClientRect();const before=(e.clientY<r.top+r.height/2&&Math.abs(e.clientY-(r.top+r.height/2))>r.height*.2)||e.clientX<r.left+r.width/2;board.insertBefore(dragState.el,before?target:target.nextSibling)}else if(under===board){board.appendChild(dragState.el)}}
 function endPointerDrag(){document.removeEventListener('pointermove',pointerMove);if(!dragState)return;dragState.el.classList.remove('dragging');dragState.ghost.remove();dragState=null}
 function arrangedSentence(){return $$('#wordBoard .word-card').map(x=>x.textContent).join(' ')}
-function reshuffleCurrent(){if(state.answered)return;renderWords(shuffle($$('#wordBoard .word-card').map(x=>x.textContent)))}
+function normalizeAnswer(s){return s.toLowerCase().replace(/[^a-z0-9가-힣]/g,' ').split(/\s+/).filter(Boolean).sort().join(' ')}
+function matchesAnswer(userAnswer, targetSentence){return normalizeAnswer(userAnswer)===normalizeAnswer(targetSentence)}
+function reshuffleCurrent(){if(state.answered)return;let words=$$('#wordBoard .word-card').map(x=>x.textContent);let mixed=shuffle(words);const item=currentQuestion();while(mixed.join(' ')===item.sentence){mixed=shuffle(words)}renderWords(mixed)}
 
 function useHint(){if(state.hintUsed||state.answered)return;openConfirm('힌트를 볼까요? 💡',`점수가 3점 줄어듭니다.`,()=>{state.hintUsed=true;$('#hintBtn').disabled=true;$('#hintBox').innerHTML=`<b>뜻:</b> ${currentQuestion().hint}`;$('#hintBox').classList.add('show');closeModal()},'힌트 보기');}
-function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(answer===item.sentence){state.answered=true;const earned=Math.max(2,10-state.attempts*3-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('correctSound');if(state.voiceOn)setTimeout(()=>speak(item.sentence),500);openFeedback('정답입니다! 🌟 완벽해요!',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;playEffect('wrongSound');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){$('#feedbackToast').textContent=`💭 아직 아니에요! 다시 시도해보세요. (${state.attempts}/3번 시도)`}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<p>세 번 도전했습니다. 이번에는 이 문장을 기억해 주세요.</p><div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
+function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(2,10-state.attempts*3-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;const musicWasOn=BGM.on && !bgmEl().paused;bgmStop();const sound=$('#correctSound');sound.currentTime=0;sound.onended=null;sound.play().catch(()=>{});if(state.voiceOn){sound.onended=()=>{speak(item.sentence);if(musicWasOn)setTimeout(()=>bgmStart(),1200)}};openFeedback('멋지게 문장 퍼즐을 완성했어요. +'+earned+'점',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;playEffect('wrongSound');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`아깝다! 순서를 다시 살펴봐요. (${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<p>세 번 도전했습니다. 이번에는 이 문장을 기억해 주세요.</p><div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function nextQuestion(){closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
-function finishGame(){$('#progressBar').style.width='100%';playEffect('completeSound');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사! 🏆':pct>=.65?'정말 잘했어요! 🌟':'끝까지 도전했어요! 🌱';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`✅ ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=`🏷️ ${currentCategory().name}`;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div style="margin-bottom:10px"><b style="font-size:18px">${i+1}. ${r.ok?'✅ 정답!':'🌱 다시 보기'}</b></div><div><span style="font-size:20px;color:#4a3476;font-weight:bold;display:block;margin-bottom:8px">${r.sentence}</span><span style="font-size:16px;color:#6e5a7e;display:block;line-height:1.5"><b>뜻:</b> ${r.meaning}</span></div></div>`).join('');makeConfetti();}
+function finishGame(){$('#progressBar').style.width='100%';playEffect('completeSound');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사! 🏆':pct>=.65?'정말 잘했어요! 🌟':'끝까지 도전했어요! 🌱';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`✅ ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=`🏷️ ${currentCategory().name}`;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div style="margin-bottom:10px"><b style="font-size:18px">${i+1}. ${r.ok?'✅ 정답!':'🌱 다시 보기'}</b></div><div><span style="font-size:20px;color:#4a3476;font-weight:bold;display:block;margin-bottom:8px">${r.sentence} — ${r.meaning}</span><span style="font-size:16px;color:#6e5a7e;display:block;line-height:1.5">정답으로 잘 맞혔어요!</span></div></div>`).join('');makeConfetti();}
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
-function openHelp(){if(BGM.on)bgmStart();$('#modalTitle').textContent='How to Play 🦉';$('#modalBody').innerHTML=`<p><b>📚 Unjumble Game에 오신 것을 환영합니다!</b></p><p style="font-size:17px;line-height:1.6;color:#5a5a5a">귀여운 단어 카드들을 올바른 순서로 배열하여 영어 문장을 완성하는 게임입니다.</p><ul class="how-list"><li><b>1️⃣ 주제 선택</b><span>먼저 큰 주제를 고르고, 그 다음 세부 주제를 선택하세요.</span></li><li><b>2️⃣ 카드 정렬</b><span>화면에 나타난 단어 카드를 끌어서 올바른 순서로 배열하세요.</span></li><li><b>⭐ 점수 시스템</b><span>첫 시도: 10점 | 두 번째: 7점 | 세 번째: 5점 | 힌트 사용: -3점</span></li><li><b>💡 힌트 사용</b><span>각 문제마다 힌트는 한 번만 사용할 수 있습니다.</span></li><li><b>🎯 게임 진행</b><span>총 10문제를 풀고 최종 점수를 확인하세요.</span></li><li><b>📖 문장 복습</b><span>게임이 끝나면 풀었던 모든 문장과 뜻을 다시 확인할 수 있습니다.</span></li></ul>`;$('#modalActions').innerHTML='<button class="primary-btn" onclick="closeModal()">시작하기! 🚀</button>';openModal();}
+function openHelp(){if(BGM.on)bgmStart();const targetCount=Math.min(Math.max(1, currentCategory()?.subs.filter(s=>state.selectedSubs.has(s.id)).reduce((n,s)=>n+s.questions.length,0) || 0),10);$('#modalTitle').textContent='How to Play 🦉';$('#modalBody').innerHTML=`<p><b>📚 Unjumble Game에 오신 것을 환영합니다!</b></p><p style="font-size:17px;line-height:1.6;color:#5a5a5a">귀여운 단어 카드들을 올바른 순서로 배열하여 영어 문장을 완성하는 게임입니다.</p><ul class="how-list"><li><b>1️⃣ 주제 선택</b><span>먼저 큰 주제를 고르고, 그 다음 세부 주제를 선택하세요.</span></li><li><b>2️⃣ 카드 정렬</b><span>화면에 나타난 단어 카드를 끌어서 올바른 순서로 배열하세요.</span></li><li><b>💡 힌트 사용</b><span>필요하면 뜻을 볼 수 있지만 점수가 3점 줄어듭니다.</span></li><li><b>🎯 게임 진행</b><span>총 ${targetCount}문제를 풀고 최종 점수를 확인하세요.</span></li><li><b>📖 문장 복습</b><span>게임이 끝나면 풀었던 모든 문장과 뜻을 다시 확인할 수 있습니다.</span></li></ul>`;$('#modalActions').innerHTML='<button class="primary-btn" onclick="goToCategory();closeModal()">시작하기! 🚀</button>';modalMode='help';openModal();}
 function toggleSfx(){state.sfxOn=!state.sfxOn;updateUtilityButtons();}
-function openFeedback(title,body,ok){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;$('#modalActions').innerHTML=`<button class="primary-btn" onclick="nextQuestion()">${state.round===state.questions.length-1?'결과 보기 🎉':'다음 ➜'}</button>`;openModal();}
-function openConfirm(title,body,yesFn,yesText='네'){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=`<p>${body}</p>`;window.__confirmAction=yesFn;$('#modalActions').innerHTML=`<button class="secondary-btn" onclick="closeModal()">아니요</button><button class="primary-btn" onclick="runConfirm()">${yesText}</button>`;openModal();}
+function openFeedback(title,body,ok){modalMode='answer';$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;$('#modalActions').innerHTML=`<button class="primary-btn" onclick="nextQuestion()">${state.round===state.questions.length-1?'결과 보기 🎉':'다음 ➜'}</button>`;const closeBtn=$('.modal-close');closeBtn.style.display='none';openModal();}
+function openConfirm(title,body,yesFn,yesText='네'){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=`<p>${body}</p>`;window.__confirmAction=yesFn;$('#modalActions').innerHTML=`<button class="secondary-btn" onclick="closeModal()">아니요</button><button class="primary-btn" onclick="runConfirm()">${yesText}</button>`;modalMode='confirm';const closeBtn=$('.modal-close');closeBtn.style.display='flex';openModal();}
 function runConfirm(){const fn=window.__confirmAction;window.__confirmAction=null;closeModal();if(fn)fn()}
-function openModal(){const m=$('#modalBackdrop');m.classList.add('show');setTimeout(()=>m.querySelector('button')?.focus(),50)}
-function closeModal(){$('#modalBackdrop').classList.remove('show')}
-$('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop'&&!state.answered)closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop').classList.contains('show')&&!state.answered)closeModal()});
+function openModal(){const m=$('#modalBackdrop');const closeBtn=$('.modal-close');closeBtn.style.display=(modalMode==='answer'?'none':'flex');m.classList.add('show');setTimeout(()=>m.querySelector('button')?.focus(),50)}
+function closeModal(){modalMode=null;$('.modal-close').style.display='flex';$('#modalBackdrop').classList.remove('show')}
+$('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop'&&modalMode!=='answer')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop').classList.contains('show')&&modalMode!=='answer')closeModal()});
 
 function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.currentTime=0;a.play()}catch(e){}}
-function speak(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;speechSynthesis.speak(u)}
+function speak(text){if(!state.voiceOn||!('speechSynthesis'in window))return;const a=bgmEl();const shouldResume=BGM.on&&a&&!a.paused;window.speechSynthesis.cancel();if(shouldResume)bgmStop();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;u.onend=()=>{if(BGM.on&&shouldResume){setTimeout(()=>{const current=bgmEl();if(current&&BGM.on){current.play().catch(()=>{})}},180)}};speechSynthesis.speak(u)}
 function toggleVoice(){state.voiceOn=!state.voiceOn;updateUtilityButtons()}
 function updateUtilityButtons(){$$('#sfx-toggle-icon,#sfx-toggle-icon-2,#sfx-toggle-icon-3,#sfx-toggle-icon-4,#sfx-toggle-icon-5').forEach(el=>{if(!el)return;el.className=state.sfxOn?'fa-solid fa-bell':'fa-solid fa-bell-slash';});$$('#music-toggle-icon,#music-toggle-icon-2,#music-toggle-icon-3,#music-toggle-icon-4,#music-toggle-icon-5').forEach(el=>{if(!el)return;el.className=BGM.on?'fa-solid fa-music':'fa-solid fa-volume-xmark';});$$('#fullscreen-toggle-icon,#fullscreen-toggle-icon-2,#fullscreen-toggle-icon-3,#fullscreen-toggle-icon-4,#fullscreen-toggle-icon-5').forEach(el=>{if(!el)return;el.className=document.fullscreenElement?'fa-solid fa-compress':'fa-solid fa-expand';});}
 async function toggleFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();updateUtilityButtons()}catch(e){}}
 
 let peekTimer=null;
 function escHtml(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function showSubPeek(btn,sub){clearTimeout(peekTimer);const el=$('#subPeek');if(!el)return;const list=sub.questions.slice(0,8).map(q=>`<li>${escHtml(q.sentence)}<span>${escHtml(q.hint)}</span></li>`).join('');const more=sub.questions.length>8?`<div class="peek-more">외 ${sub.questions.length-8}문장</div>`:'';el.innerHTML=`<div class="peek-head">${sub.emoji} ${escHtml(sub.name)}</div><ol class="peek-list">${list}</ol>${more}`;el.style.visibility='hidden';el.classList.add('show');const r=btn.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;let left=r.left+r.width/2-w/2;left=Math.max(10,Math.min(left,window.innerWidth-w-10));let top=r.bottom+8;if(top+h>window.innerHeight-10)top=Math.max(10,r.top-h-8);el.style.left=left+'px';el.style.top=top+'px';el.style.visibility='visible';}
+function showSubPeek(btn,sub){clearTimeout(peekTimer);const el=$('#subPeek');if(!el)return;const list=sub.questions.slice(0,8).map(q=>`<li>${escHtml(q.sentence)}</li>`).join('');const more=sub.questions.length>8?`<div class="peek-more">외 ${sub.questions.length-8}문장</div>`:'';el.innerHTML=`<div class="peek-head">${sub.emoji} ${escHtml(sub.name)}</div><ol class="peek-list">${list}</ol>${more}`;el.style.visibility='hidden';el.classList.add('show');const r=btn.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;let left=r.left+r.width/2-w/2;left=Math.max(10,Math.min(left,window.innerWidth-w-10));let top=r.bottom+8;if(top+h>window.innerHeight-10)top=Math.max(10,r.top-h-8);el.style.left=left+'px';el.style.top=top+'px';el.style.visibility='visible';}
 function scheduleHidePeek(){clearTimeout(peekTimer);peekTimer=setTimeout(hideSubPeek,140)}
 function hideSubPeek(){clearTimeout(peekTimer);const el=$('#subPeek');if(!el)return;el.classList.remove('show');}
 $('#subPeek').addEventListener('mouseenter',()=>clearTimeout(peekTimer));
 $('#subPeek').addEventListener('mouseleave',scheduleHidePeek);
 
-const BGM={on:true,el:null};
 function bgmEl(){if(!BGM.el){BGM.el=$('#bgmAudio');BGM.el.volume=0.35}return BGM.el}
 function bgmStart(){const a=bgmEl();if(!a||!BGM.on)return;a.play().catch(()=>{})}
 function bgmStop(){const a=bgmEl();if(!a)return;a.pause()}
-function toggleBgm(){const a=bgmEl();if(a&&a.paused){BGM.on=true;bgmStart()}else{BGM.on=false;bgmStop()}updateUtilityButtons();}
-document.addEventListener('click',()=>{if(BGM.on)bgmStart()},{once:true});
-document.addEventListener('keyup',()=>{if(BGM.on)bgmStart()},{once:true});
+function toggleBgm(){BGM.on=!BGM.on;if(BGM.on)bgmStart();else bgmStop();updateUtilityButtons();}
+document.addEventListener('click',()=>{if(BGM.on&&!bgmEl().paused)bgmStart()},{once:false});
+document.addEventListener('keyup',()=>{if(BGM.on&&!bgmEl().paused)bgmStart()},{once:false});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)bgmEl()?.pause();else if(BGM.on)bgmStart()});
+window.addEventListener('load',()=>{BGM.on=true;bgmStart();updateUtilityButtons();});
 
 renderCategories();updateUtilityButtons();
 </script>
