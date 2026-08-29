@@ -631,7 +631,7 @@ function matchesAnswer(userAnswer, targetSentence){return normalizeAnswer(userAn
 function reshuffleCurrent(){if(state.answered)return;let words=$$('#wordBoard .word-card').map(x=>x.textContent);let mixed=shuffle(words);const item=currentQuestion();while(mixed.join(' ')===item.sentence){mixed=shuffle(words)}renderWords(mixed)}
 
 function useHint(){if(state.hintUsed||state.answered)return;openConfirm('힌트를 볼까요? 💡',`점수가 3점 줄어듭니다.`,()=>{state.hintUsed=true;$('#hintBtn').disabled=true;$('#hintBox').innerHTML=`<b>뜻:</b> ${currentQuestion().hint}`;$('#hintBox').classList.add('show');closeModal()},'힌트 보기');}
-function playSentenceAfterCorrectSound(sentence){const resumeBgm=BGM.on;bgmStop();const sound=$('#correctVoice');let started=false;const startSpeech=()=>{if(started)return;started=true;speak(sentence,resumeBgm)};sound.currentTime=0;sound.onended=startSpeech;const playback=sound.play();if(playback)playback.catch(startSpeech);}
+function playSentenceAfterCorrectSound(sentence){const resumeBgm=BGM.on;bgmStop();const sound=$('#correctVoice');sound.volume=1;let started=false;const startSpeech=()=>{if(started)return;started=true;speak(sentence,resumeBgm)};sound.currentTime=0;sound.onended=startSpeech;const playback=sound.play();if(playback)playback.catch(startSpeech);}
 function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(0,10-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장 퍼즐을 완성했어요. +'+earned+'점',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;state.score-=5;$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('wrongVoice');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`아깝다! 순서를 다시 살펴봐요. (-5점, ${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<p>세 번 도전했습니다. 이번에는 이 문장을 기억해 주세요.</p><div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
@@ -649,8 +649,8 @@ function closeModal(){modalMode=null;$('.modal-close').style.display='flex';$('#
 $('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop'&&modalMode!=='answer')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop').classList.contains('show')&&modalMode!=='answer')closeModal()});
 
-function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.currentTime=0;a.play()}catch(e){}}
-function speak(text,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!state.voiceOn||!('speechSynthesis'in window)){resume();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;u.onend=resume;u.onerror=resume;try{speechSynthesis.speak(u)}catch(e){resume()}}
+function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.volume=1;a.currentTime=0;a.play()}catch(e){}}
+function speak(text,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!state.voiceOn||!('speechSynthesis'in window)){resume();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.08;u.volume=1;u.onend=resume;u.onerror=resume;try{speechSynthesis.speak(u)}catch(e){resume()}}
 function toggleVoice(){state.voiceOn=!state.voiceOn;updateUtilityButtons()}
 function updateUtilityButtons(){$$('#sfx-toggle-icon,#sfx-toggle-icon-2,#sfx-toggle-icon-3,#sfx-toggle-icon-4,#sfx-toggle-icon-5').forEach(el=>{if(!el)return;el.className=state.sfxOn?'fa-solid fa-bell':'fa-solid fa-bell-slash';});$$('#music-toggle-icon,#music-toggle-icon-2,#music-toggle-icon-3,#music-toggle-icon-4,#music-toggle-icon-5').forEach(el=>{if(!el)return;el.className=BGM.on?'fa-solid fa-music':'fa-solid fa-volume-xmark';});$$('#fullscreen-toggle-icon,#fullscreen-toggle-icon-2,#fullscreen-toggle-icon-3,#fullscreen-toggle-icon-4,#fullscreen-toggle-icon-5').forEach(el=>{if(!el)return;el.className=document.fullscreenElement?'fa-solid fa-compress':'fa-solid fa-expand';});}
 async function toggleFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();updateUtilityButtons()}catch(e){}}
@@ -663,7 +663,7 @@ function hideSubPeek(){clearTimeout(peekTimer);const el=$('#subPeek');if(!el)ret
 $('#subPeek').addEventListener('mouseenter',()=>clearTimeout(peekTimer));
 $('#subPeek').addEventListener('mouseleave',scheduleHidePeek);
 
-function bgmEl(){if(!BGM.el){BGM.el=$('#bgmAudio');BGM.el.volume=0.35;BGM.el.autoplay=true}return BGM.el}
+function bgmEl(){if(!BGM.el){BGM.el=$('#bgmAudio');BGM.el.volume=0.18;BGM.el.autoplay=true}return BGM.el}
 function bgmStart(){const a=bgmEl();if(!a||!BGM.on)return;a.play().catch(()=>{})}
 function bgmStop(){const a=bgmEl();if(!a)return;a.pause()}
 function toggleBgm(){BGM.on=!BGM.on;if(BGM.on)bgmStart();else bgmStop();updateUtilityButtons();}
