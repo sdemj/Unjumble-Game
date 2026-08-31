@@ -1,0 +1,200 @@
+{
+  "sessionMinutes": 45.6,
+  "reloadCount": 6,
+  "screenNow": "resultScreen",
+  "findings": [
+    {
+      "level": "WARN",
+      "title": "같은 곳에 이벤트가 계속 쌓이고 있음",
+      "count": 6,
+      "items": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 144
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 144
+        },
+        {
+          "대상": "document / pointerup",
+          "개수": 75
+        },
+        {
+          "대상": "document / pointercancel",
+          "개수": 75
+        },
+        {
+          "대상": "button / mouseenter",
+          "개수": 60
+        },
+        {
+          "대상": "button / mouseleave",
+          "개수": 60
+        }
+      ]
+    },
+    {
+      "level": "ERR",
+      "title": "게임 화면이 아닌 곳에서 음성이 재생됨",
+      "screens": [
+        "resultScreen",
+        "resultScreen",
+        "resultScreen",
+        "resultScreen",
+        "coverScreen",
+        "resultScreen",
+        "coverScreen",
+        "resultScreen"
+      ]
+    },
+    {
+      "level": "INFO",
+      "title": "음성 읽기 횟수",
+      "count": 47,
+      "noVoiceCount": 0,
+      "recent": [
+        {
+          "문장": "My friend helps me often.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "Let's study English together.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "coverScreen"
+        },
+        {
+          "문장": "Can I have some water?",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "Here is your lunch menu.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "I do my homework after school.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "She drinks water after lunch.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "I read a book every day.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "We clean the room together.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "resultScreen"
+        }
+      ]
+    }
+  ],
+  "previousSegments": [
+    {
+      "reloadIndex": 3,
+      "endedAt": 1788188004516,
+      "minutesInSegment": 1,
+      "screenAtEnd": "resultScreen",
+      "liveIntervals": null,
+      "heavyListeners": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 21
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 21
+        }
+      ],
+      "nodeGrowth": null,
+      "domLeftovers": null
+    },
+    {
+      "reloadIndex": 5,
+      "endedAt": 1788189036625,
+      "minutesInSegment": 15.7,
+      "screenAtEnd": "gameScreen",
+      "liveIntervals": null,
+      "heavyListeners": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 187
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 187
+        },
+        {
+          "대상": "document / pointerup",
+          "개수": 72
+        },
+        {
+          "대상": "document / pointercancel",
+          "개수": 72
+        },
+        {
+          "대상": "button / mouseenter",
+          "개수": 42
+        },
+        {
+          "대상": "button / mouseleave",
+          "개수": 42
+        }
+      ],
+      "nodeGrowth": null,
+      "domLeftovers": null
+    },
+    {
+      "reloadIndex": 6,
+      "endedAt": 1788189549505,
+      "minutesInSegment": 7.7,
+      "screenAtEnd": "subScreen",
+      "liveIntervals": null,
+      "heavyListeners": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 122
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 122
+        },
+        {
+          "대상": "document / pointerup",
+          "개수": 59
+        },
+        {
+          "대상": "document / pointercancel",
+          "개수": 59
+        },
+        {
+          "대상": "button / mouseenter",
+          "개수": 57
+        },
+        {
+          "대상": "button / mouseleave",
+          "개수": 57
+        }
+      ],
+      "nodeGrowth": null,
+      "domLeftovers": null
+    }
+  ],
+  "problemCount": 2
+}

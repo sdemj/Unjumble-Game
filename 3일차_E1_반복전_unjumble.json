@@ -1,0 +1,130 @@
+{
+  "sessionMinutes": 37.3,
+  "reloadCount": 6,
+  "screenNow": "gameScreen",
+  "findings": [
+    {
+      "level": "ERR",
+      "title": "게임 화면이 아닌 곳에서 음성이 재생됨",
+      "screens": [
+        "resultScreen",
+        "resultScreen",
+        "resultScreen",
+        "resultScreen"
+      ]
+    },
+    {
+      "level": "INFO",
+      "title": "음성 읽기 횟수",
+      "count": 28,
+      "noVoiceCount": 0,
+      "recent": [
+        {
+          "문장": "My house is behind the park.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "Where is the school library?",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "The bank is near here.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "resultScreen"
+        },
+        {
+          "문장": "My house is behind the park.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "She wears boots in winter.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "Take off your wet shoes.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "English class is fun today.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        },
+        {
+          "문장": "My favorite subject is art.",
+          "언어": "en-US",
+          "목소리": "Google US English",
+          "화면": "gameScreen"
+        }
+      ]
+    }
+  ],
+  "previousSegments": [
+    {
+      "reloadIndex": 3,
+      "endedAt": 1788188004516,
+      "minutesInSegment": 1,
+      "screenAtEnd": "resultScreen",
+      "liveIntervals": null,
+      "heavyListeners": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 21
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 21
+        }
+      ],
+      "nodeGrowth": null,
+      "domLeftovers": null
+    },
+    {
+      "reloadIndex": 5,
+      "endedAt": 1788189036625,
+      "minutesInSegment": 15.7,
+      "screenAtEnd": "gameScreen",
+      "liveIntervals": null,
+      "heavyListeners": [
+        {
+          "대상": "div / pointerdown",
+          "개수": 187
+        },
+        {
+          "대상": "div / keydown",
+          "개수": 187
+        },
+        {
+          "대상": "document / pointerup",
+          "개수": 72
+        },
+        {
+          "대상": "document / pointercancel",
+          "개수": 72
+        },
+        {
+          "대상": "button / mouseenter",
+          "개수": 42
+        },
+        {
+          "대상": "button / mouseleave",
+          "개수": 42
+        }
+      ],
+      "nodeGrowth": null,
+      "domLeftovers": null
+    }
+  ],
+  "problemCount": 1
+}
