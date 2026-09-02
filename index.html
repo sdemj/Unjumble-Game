@@ -10,7 +10,7 @@
 :root{
   --ink:#4a3476; --pink:#ff4f9a; --purple:#a060ef; --blue:#56aee7; --yellow:#ffc83d;
   --cream:#fff7e7; --peach:#ffd8bd; --mint:#c9f4bc; --panel:#fffdf8; --shadow:0 14px 34px rgba(91,54,89,.18);
-  --nav-height:clamp(64px,7.2vw,110px);
+  --nav-height:clamp(64px,7.291667vw,140px);
   --title-font:'Hakgyoansim Poster',sans-serif;
   --body-font:'Hakgyoansim Boardmarker',sans-serif;
 }
@@ -162,8 +162,8 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
 .review-status{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#fff;color:#4a3476;box-shadow:0 3px 0 rgba(90,57,109,.16);font-size:15px;font-weight:bold;line-height:1.1;text-align:center}
 .review-play{width:42px;height:42px;border-radius:50%;background:#fff;box-shadow:0 3px 0 rgba(90,57,109,.16);font-size:19px}
 .review-play .fa-volume-high::before{content:'🔊';font-size:20px}
-.review-main b{display:block;font-size:20px;margin-bottom:5px}
-.review-meaning{font-size:18px;color:#6e5a7e;line-height:1.45}
+.review-sentence{display:block;font-family:Arial,sans-serif;font-size:clamp(25px,2.2vw,34px);font-weight:700;line-height:1.3;color:#4a3476;margin-bottom:7px}
+.review-meaning{font-size:clamp(21px,1.8vw,28px);color:#6e5a7e;line-height:1.4}
 .review-note{font-size:17px;color:#8a7398;margin-top:4px}
 .answer-meaning{font-size:clamp(24px,3vw,30px)!important;line-height:1.5}
 .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -185,6 +185,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
  #coverScreen{--coverNote:112px}.cover-note{font-size:16px;line-height:1.4}
  .category-grid{grid-template-columns:1fr}.category-btn{padding:12px}.page{margin-top:12px}.game-page{margin-top:8px}
  .game-board{padding:14px;border-radius:25px}.word-board{min-height:170px}.game-actions button{flex:1 1 42%;padding:14px 10px}
+}
+@media(min-width:1200px){
+ .page,.game-page,.result-wrap{width:min(1600px,calc(100% - 48px))}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
@@ -209,7 +212,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
 .nav-btn-circle{position:relative;width:clamp(38px,5.6vw,84px);height:100%;padding:0;border:0;border-radius:18px;background:transparent;box-shadow:none;cursor:pointer;color:transparent}
 .nav-btn-circle i{opacity:0}.nav-btn-circle:hover{transform:none;box-shadow:none}
 .nav-btn-circle.muted::after{content:'';position:absolute;top:50%;left:22%;width:56%;height:3px;border-radius:999px;background:#111;box-shadow:0 1px 1px rgba(255,255,255,.85);transform:rotate(-45deg);pointer-events:none}
-#top-nav-bar{position:fixed;top:0;left:0;z-index:60;width:100%;height:var(--nav-height);display:block;background:url('상단바.png') center/100% 100% no-repeat}
+#top-nav-bar{position:fixed;top:0;left:0;z-index:60;width:100%;height:var(--nav-height);display:block;background:url('상단바.png') center/100% auto no-repeat}
 body.cover-active #top-nav-bar{background:none}
 body.cover-active .nav-btn-circle{background-image:url('상단바.png');background-repeat:no-repeat;background-size:100vw var(--nav-height);background-position-y:center}
 body.cover-active .nav-btn-group:first-child .nav-btn-circle:nth-child(1){background-position-x:calc(-2.35vw)}
@@ -223,6 +226,18 @@ body.cover-active .nav-btn-group:last-child .nav-btn-circle:nth-child(4){backgro
 @media(orientation:landscape) and (min-height:420px){.page,.game-page,.result-wrap{margin-top:10px;margin-bottom:12px}.page{gap:10px}.hero-card{padding:14px 18px;gap:16px}.hero-card h1{font-size:34px;margin-bottom:6px}.hero-card p{font-size:18px}.snapshot{padding:10px}.snapshot-title{margin-bottom:7px}.mini-word{padding:8px 10px;font-size:18px}.panel{padding:12px 16px}.section-title{font-size:26px;margin-bottom:9px}.step-badge{width:34px;height:34px}.category-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.category-btn{padding:12px;font-size:22px;justify-content:center;min-height:0}.category-btn .emoji{font-size:22px}.topic-label small{font-size:17px}.game-board{min-height:0;padding:16px;gap:10px}.word-board{min-height:120px;padding:14px}.word-card{padding:14px 18px;font-size:clamp(23px,3vw,33px)}.prompt h2{font-size:clamp(26px,3.5vw,38px)}.game-actions button{padding:11px 18px;font-size:20px}#categoryScreen .page,#subScreen .page{min-height:calc(100vh - var(--nav-height) - 24px)}#categoryScreen .panel,#subScreen .panel{display:flex;flex-direction:column}#categoryScreen .category-grid,#subScreen .sub-grid{flex:1;grid-auto-rows:1fr}#subScreen .sub-btn{font-size:25px;padding:20px}#subScreen .sub-btn .topic-label small{font-size:17px}#subScreen .sub-toolbar{margin-bottom:18px}#subScreen .start-bar{margin-top:18px}}
 @media(orientation:landscape) and (min-height:420px) and (max-width:700px){.category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.category-btn{padding:8px 6px}.category-btn .topic-label>span:first-child{font-size:clamp(14px,3.2vw,20px)}.category-btn .topic-label small{font-size:14px}}
 @media(orientation:landscape) and (min-height:420px) and (max-width:440px){.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-btn .topic-label>span:first-child{font-size:clamp(14px,4.5vw,18px)}}
+@media(min-width:1200px){
+ html,body{font-size:20px}
+ .hero-card h1{font-size:clamp(50px,3.2vw,68px)}.hero-card p{font-size:clamp(26px,1.8vw,34px)}.snapshot-title{font-size:26px}.mini-word{font-size:clamp(23px,1.7vw,30px)}
+ .section-title{font-size:clamp(38px,2.6vw,50px);margin-bottom:18px}.step-badge{width:54px;height:54px;font-size:28px}
+ .category-btn,.sub-btn{container-type:inline-size}.category-btn{min-height:150px;padding:22px 18px}.category-btn .topic-label>span:first-child{font-size:clamp(26px,12cqw,40px)}.category-btn .topic-label small{font-size:clamp(17px,8cqw,25px)}
+ .sub-btn{padding:24px;font-size:clamp(27px,12cqw,40px)}.sub-btn .topic-label>span:first-child{font-size:clamp(27px,12cqw,40px)}.sub-btn .topic-label small,.sub-btn .sub-count{font-size:clamp(18px,8cqw,25px)}
+ #subScreen .select-all-btn{min-height:132px;font-size:clamp(34px,2.4vw,44px)}#subScreen .sub-btn[data-sub-id]{min-height:200px}#subScreen .sub-btn[data-sub-id] .topic-label>span:first-child{font-size:clamp(35px,14cqw,50px)}#subScreen .sub-btn[data-sub-id] .topic-label small,#subScreen .sub-btn[data-sub-id] .sub-count{font-size:clamp(24px,9cqw,32px)}
+ .counter,.sub-badge{font-size:32px}.primary-btn,.secondary-btn,.danger-btn{font-size:clamp(25px,1.7vw,32px);padding:18px 30px}
+ .hud-chip{font-size:24px;padding:13px 18px}.progress-wrap{height:28px}.topic-line{font-size:28px;padding:10px 20px}.prompt h2{font-size:clamp(46px,3.2vw,62px)}.word-board{min-height:200px}.word-card{font-size:clamp(34px,2.6vw,48px);padding:24px 28px}.hint-box,.answer-reveal,.feedback-toast{font-size:26px}
+ .result-card h1{font-size:clamp(64px,4.8vw,92px)}.score-big{font-size:clamp(84px,6.4vw,126px)}.stat{font-size:28px;padding:17px 24px}.review{padding:30px}.review h2{font-size:44px}.review-item{grid-template-columns:72px 1fr 54px;gap:18px;padding:20px 22px}.review-status{width:72px;height:72px;font-size:19px}.review-play{width:54px;height:54px}.review-sentence{font-size:clamp(30px,2.1vw,40px)}.review-meaning{font-size:clamp(25px,1.7vw,32px)}
+ .modal{width:min(860px,100%);padding:34px}.modal h2{font-size:52px}.modal p,.modal li{font-size:25px}.how-section h3{font-size:30px}
+}
 </style>
 </head>
 <body class="cover-active">
@@ -671,7 +686,7 @@ function submitAnswer(){if(state.answered)return;const item=currentQuestion();co
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function nextQuestion(){closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
-function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><span style="font-size:20px;color:#4a3476;font-weight:bold;display:block;margin-bottom:8px">${r.sentence} - ${r.meaning}</span></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
+function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><div class="review-sentence">${r.sentence}</div><div class="review-meaning">${r.meaning}</div></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
 function openHelp(source='nav'){$('#modalTitle').textContent='How to Play';$('#modalBody').innerHTML=`<section class="how-section"><h3>오늘의 미션</h3><p>흩어진 단어 카드를 바른 순서로 놓아 영어 문장을 완성해요.</p></section><section class="how-section"><h3>게임 방법</h3><ul class="how-list"><li>마음에 드는 주제와 문장을 골라요.</li><li>단어 카드를 드래그하거나 화살표 키로 옮겨요.</li><li>완성한 문장을 제출하고 소리 내어 함께 읽어요.</li></ul></section><section class="how-section"><h3>점수 규칙</h3><ul class="how-list"><li>정답일 때 +10점</li><li>오답일 때 -5점</li><li>힌트 사용 시 -3점</li></ul></section>`;$('#modalActions').innerHTML=source==='intro'?'<button class="secondary-btn" onclick="closeModal()">닫기</button><button class="primary-btn" onclick="goToCategory()">Game Start</button>':'';modalMode='help';openModal();$('.modal-close').style.display=source==='intro'?'none':'flex';}
