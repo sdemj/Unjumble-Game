@@ -1,0 +1,252 @@
+[인사와 소개]
+<첫인사>
+1. How are you today?
+오늘 기분이 어때?
+2. Nice to meet you.
+만나서 반가워.
+3. Good morning, my friend.
+좋은 아침이야, 친구야.
+4. Welcome to our English class.
+우리 영어 수업에 온 것을 환영해요.
+<자기소개>
+1. My name is Jina.
+내 이름은 지나야.
+2. I'm ten years old.
+난 열 살이야.
+3. I live in Busan.
+나는 부산에 살아.
+4. I'm in the fifth grade.
+나는 5학년이야.
+<기분>
+1. I am very happy.
+나는 아주 행복해.
+2. Are you tired now?
+너는 지금 피곤하니?
+3. He is very excited.
+그는 아주 신났어.
+4. She is sad.
+그녀는 슬퍼.
+[학교생활]
+<교실 표현>
+1. Open your English book, please.
+영어책을 펴 주세요.
+2. Close the classroom door, please.
+교실 문을 닫아 주세요.
+3. Put your pencil on the desk.
+연필을 책상 위에 놓으세요.
+4. Raise your hand, please.
+손을 들어 주세요.
+<교과목>
+1. I like math and science.
+나는 수학과 과학을 좋아해.
+2. English class is fun today.
+오늘 영어 수업이 재미있어.
+3. We have music class on Friday.
+우리는 금요일에 음악 수업이 있어.
+4. My favorite subject is art.
+내가 가장 좋아하는 과목은 미술이야.
+<학교 규칙>
+1. Please walk in the hallway.
+복도에서는 걸어 다니세요.
+2. Don't run in class, please.
+교실에서 뛰지 마세요.
+3. Listen to your teacher carefully.
+선생님 말씀을 잘 들으세요.
+4. Be kind to your friends.
+친구에게 친절하게 대하세요.
+[일상생활]
+<아침>
+1. I get up at seven.
+나는 7시에 일어나요.
+2. I wash my face every morning.
+나는 매일 아침 세수를 해요.
+3. I eat breakfast with my family.
+나는 가족과 함께 아침을 먹어요.
+4. I go to school early.
+나는 학교에 일찍 가요.
+<하루 일과>
+1. I do my homework after school.
+나는 방과 후에 숙제를 해요.
+2. We clean the room together.
+우리는 함께 방을 청소해요.
+3. I read a book every day.
+나는 매일 책을 읽어요.
+4. She drinks water after lunch.
+그녀는 점심을 먹고 나서 물을 마셔요.
+<방과 후>
+1. I play soccer with friends.
+나는 친구들과 축구를 해요.
+2. He goes to the library.
+그는 도서관에 가요.
+3. We watch TV after dinner.
+우리는 저녁 식사 후에 텔레비전을 봐요.
+4. They ride bikes in the park.
+그들은 공원에서 자전거를 타요.
+[가족과 친구]
+<우리 가족>
+1. This is my little sister.
+이 아이는 내 여동생이에요.
+2. My dad is cooking dinner.
+아빠가 저녁을 요리하고 있어요.
+3. I love my family very much.
+나는 우리 가족을 아주 사랑해요.
+4. We visit Grandma on Sunday.
+우리는 일요일에 할머니 댁에 가요.
+<친구>
+1. Mina is my best friend.
+미나는 나의 가장 친한 친구예요.
+2. We play games after school.
+우리는 방과 후에 게임을 해요.
+3. My friend helps me often.
+내 친구는 자주 나를 도와줘요.
+4. Let's study English together.
+우리 함께 영어를 공부해요.
+<생김새>
+1. He has short black hair.
+그는 짧은 검은 머리를 하고 있어요.
+2. She's wearing a red hat.
+그녀는 빨간 모자를 쓰고 있어요.
+3. My brother is very tall.
+내 남동생은 키가 아주 커요.
+4. The baby has big eyes.
+아기는 눈이 커요.
+[음식과 쇼핑]
+<좋아하는 음식>
+1. I like apples and bananas.
+나는 사과와 바나나를 좋아해요.
+2. This pizza tastes really good.
+이 피자는 정말 맛있어요.
+3. My favorite food is bibimbap.
+내가 가장 좋아하는 음식은 비빔밥이에요.
+4. We need milk and bread.
+우리는 우유와 빵이 필요해요.
+<식당>
+1. Can I have some water?
+물을 좀 마셔도 되나요?
+2. I'd like chicken, please.
+저는 치킨으로 할게요.
+3. The soup is too hot.
+수프가 너무 뜨거워요.
+4. Here's your lunch menu.
+여기 점심 메뉴가 있어요.
+<쇼핑>
+1. How much is this shirt?
+이 셔츠는 얼마예요?
+2. I want the blue pants.
+저는 파란색 바지를 갖고 싶어요.
+3. Give me two apples, please.
+사과 두 개 주세요.
+4. This bag is very cheap.
+이 가방은 아주 싸요.
+[시간과 날짜]
+<시간>
+1. What time is it now?
+지금 몇 시예요?
+2. It's three o'clock.
+지금은 3시예요.
+3. School starts at nine o'clock.
+학교는 9시에 시작해요.
+4. I go home at four.
+나는 4시에 집에 가요.
+<요일>
+1. What day is it today?
+오늘은 무슨 요일이에요?
+2. Today is Monday.
+오늘은 월요일이에요.
+3. We have art class on Wednesday.
+우리는 수요일에 미술 수업이 있어요.
+4. We play badminton on Tuesday.
+우리는 화요일에 배드민턴을 쳐요.
+<생일>
+1. When is your birthday?
+너의 생일은 언제니?
+2. My birthday is in May.
+내 생일은 5월이에요.
+3. Happy birthday to you!
+생일 축하해!
+4. I have a party today.
+나는 오늘 파티가 있어요.
+[날씨와 계절]
+<오늘 날씨>
+1. How's the weather?
+날씨가 어때요?
+2. It's sunny and warm.
+화창하고 따뜻해요.
+3. It's raining a lot.
+비가 많이 와요.
+4. It's very windy.
+바람이 아주 세게 불어요.
+<계절>
+1. My favorite season is spring.
+내가 가장 좋아하는 계절은 봄이에요.
+2. It's very cold in winter.
+겨울에는 아주 추워.
+3. We swim in the summer.
+우리는 여름에 수영해요.
+4. We pick apples in fall.
+우리는 가을에 사과를 따요.
+<날씨와 옷>
+1. Put on your warm jacket, please.
+따뜻한 재킷을 입으세요.
+2. I need an umbrella.
+나는 우산이 필요해요.
+3. She wears boots in winter.
+그녀는 겨울에 부츠를 신어요.
+4. Take off your wet shoes, please.
+젖은 신발을 벗으세요.
+[취미와 운동]
+<취미>
+1. I like drawing cute animals.
+나는 귀여운 동물 그리기를 좋아해요.
+2. She enjoys reading comic books.
+그녀는 만화책 읽기를 즐겨요.
+3. We collect pretty stickers together.
+우리는 함께 예쁜 스티커를 모아요.
+4. He plays the piano well.
+그는 피아노를 잘 쳐요.
+<운동>
+1. Let's play table tennis.
+우리 탁구 치자.
+2. I practice soccer every Saturday.
+나는 매주 토요일에 축구를 연습해요.
+3. We run around the playground.
+우리는 운동장을 달려요.
+4. My team won the game.
+우리 팀이 경기에서 이겼어요.
+<할 수 있어요>
+1. I can swim very fast.
+나는 아주 빨리 수영할 수 있어요.
+2. Can you ride a bike?
+당신은 자전거를 탈 수 있나요?
+3. She can sing English songs.
+그녀는 영어 노래를 부를 수 있어요.
+4. He can't jump very high.
+그는 아주 높이 뛸 수 없어요.
+[장소와 이동]
+<여러 장소>
+1. Where is the school library?
+학교 도서관은 어디에 있나요?
+2. The bank is near here.
+은행은 여기 가까이에 있어요.
+3. We're at the museum.
+우리는 박물관에 있어요.
+4. My house is behind the park.
+우리 집은 공원 뒤에 있어요.
+<길 안내>
+1. Go straight and turn left.
+직진하고 왼쪽으로 돌아요.
+2. Turn right at the corner.
+모퉁이에서 오른쪽으로 돌아요.
+3. The store is across the street.
+가게는 길 건너편에 있어요.
+4. Walk two blocks, please.
+두 블록 걸어가세요.
+<교통수단>
+1. I go by school bus.
+나는 통학 버스를 타고 가요.
+2. We take the subway downtown.
+우리는 지하철을 타고 시내에 가요.
+3. My dad drives to work.
+아빠는 운전해서 일하러 가요.
+4. They ride the train together.
+그들은 함께 기차를 타요.
