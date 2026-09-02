@@ -15,7 +15,7 @@
   --body-font:'Hakgyoansim Boardmarker',sans-serif;
 }
 *{box-sizing:border-box}
-html{height:100%;touch-action:manipulation}
+html{height:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%;background:linear-gradient(135deg,#ffe7d6,#fff6dc 48%,#f2dcff);color:var(--ink);font-family:var(--body-font);font-size:18px;overflow-x:hidden}
 body{padding-top:var(--nav-height)}
 button,input{font:inherit}
@@ -31,7 +31,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
 
 #coverScreen{align-items:center;justify-content:center;background:url('Unjumble Game 표지.png') center/cover no-repeat;gap:clamp(6px,1.4vh,14px);padding:0;--coverNote:86px;min-height:100vh;min-height:100svh;height:100vh;height:100svh;width:100%;position:relative;margin-top:calc(-1 * var(--nav-height))}
 .cover-frame{position:absolute;inset:0;width:100%;height:100%;background:transparent;display:flex;align-items:center;justify-content:center}
-.cover-hotspot{position:absolute;z-index:2;background:transparent;border-radius:999px;color:transparent;overflow:hidden;cursor:pointer;border:0;box-shadow:none;outline:none}
+.cover-hotspot{position:absolute;z-index:2;background:transparent;border-radius:999px;color:transparent;overflow:hidden;cursor:pointer;border:0;box-shadow:none;outline:none;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent}
 .cover-hotspot::before,.cover-hotspot::after{display:none!important;content:none!important}
 .cover-hotspot:hover,.cover-hotspot:focus-visible,.cover-hotspot:active{transform:none;filter:none;box-shadow:none;outline:none}
 .cover-hotspot.help{left:31%;top:81%;width:18%;height:14%}
@@ -157,12 +157,15 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
 .review{background:#fffdf8;border-radius:30px;padding:22px;box-shadow:var(--shadow)}
 .review h2{margin-top:0}
 .review-list{display:grid;gap:12px}
-.review-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;text-align:left;background:#fff7ea;border-radius:16px;padding:14px 16px;align-items:start}
+.review-item{display:grid;grid-template-columns:58px 1fr auto;gap:12px;text-align:left;background:#fff7ea;border-radius:16px;padding:14px 16px;align-items:start}
 .review-item.ok{background:#effbe9}.review-item.no{background:#fff0ef}
+.review-status{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#fff;color:#4a3476;box-shadow:0 3px 0 rgba(90,57,109,.16);font-size:15px;font-weight:bold;line-height:1.1;text-align:center}
 .review-play{width:42px;height:42px;border-radius:50%;background:#fff;box-shadow:0 3px 0 rgba(90,57,109,.16);font-size:19px}
+.review-play .fa-volume-high::before{content:'🔊';font-size:20px}
 .review-main b{display:block;font-size:20px;margin-bottom:5px}
 .review-meaning{font-size:18px;color:#6e5a7e;line-height:1.45}
 .review-note{font-size:17px;color:#8a7398;margin-top:4px}
+.answer-meaning{font-size:clamp(24px,3vw,30px)!important;line-height:1.5}
 .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .confetti i{position:absolute;top:-20px;width:12px;height:22px;border-radius:4px;animation:fall var(--d) linear infinite;animation-delay:var(--delay);background:var(--c);left:var(--x)}
 @keyframes fall{to{transform:translateY(900px) rotate(760deg)}}
@@ -235,9 +238,9 @@ body.cover-active .nav-btn-group:last-child .nav-btn-circle:nth-child(4){backgro
         </div>
         <div class="nav-btn-group">
           <button type="button" id="nav-htp-btn" class="nav-btn-circle" title="How to Play" aria-label="게임 방법" onclick="openHelp()"><i class="fa-regular fa-circle-question"></i></button>
-          <button type="button" id="sfx-toggle-btn" class="nav-btn-circle" title="효과음 On/Off" aria-label="효과음 켜기/끄기" onclick="toggleSfx()"><i id="sfx-toggle-icon" class="fa-solid fa-bell"></i></button>
-          <button type="button" id="music-toggle-btn" class="nav-btn-circle" title="배경음악 On/Off" aria-label="배경음악 켜기/끄기" onclick="toggleBgm()"><i id="music-toggle-icon" class="fa-solid fa-music"></i></button>
-          <button type="button" id="fullscreen-toggle-btn" class="nav-btn-circle" title="전체화면" aria-label="전체 화면" onclick="toggleFullscreen()"><i id="fullscreen-toggle-icon" class="fa-solid fa-expand"></i></button>
+          <button type="button" id="sfx-toggle-btn-cover" class="nav-btn-circle" title="효과음 On/Off" aria-label="효과음 켜기/끄기" onclick="toggleSfx()"><i id="sfx-toggle-icon-cover" class="fa-solid fa-bell"></i></button>
+          <button type="button" id="music-toggle-btn-cover" class="nav-btn-circle" title="배경음악 On/Off" aria-label="배경음악 켜기/끄기" onclick="toggleBgm()"><i id="music-toggle-icon-cover" class="fa-solid fa-music"></i></button>
+          <button type="button" id="fullscreen-toggle-btn-cover" class="nav-btn-circle" title="전체화면" aria-label="전체 화면" onclick="toggleFullscreen()"><i id="fullscreen-toggle-icon-cover" class="fa-solid fa-expand"></i></button>
         </div>
       </div>
       <button type="button" class="cover-hotspot help" aria-label="게임 방법" onclick="openHelp('intro')"></button>
@@ -338,8 +341,7 @@ body.cover-active .nav-btn-group:last-child .nav-btn-circle:nth-child(4){backgro
         <div class="question-top">
           <div class="prompt">
             <p id="topicLine" class="topic-line">주제</p>
-            <h2>👇 카드를 드래그해 문장을 완성해요 👇</h2>
-            <p>올바른 순서로 배열한 후 제출하기를 눌러주세요.</p>
+            <h2>카드를 드래그해 문장을 완성해요</h2>
           </div>
         </div>
         <div>
@@ -614,6 +616,7 @@ function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Mat
 function currentCategory(){return DATA.find(c=>c.id===state.categoryId)}
 function currentQuestion(){return state.questions[state.round]}
 function currentScreenId(){return document.querySelector('.screen.active')?.id||'coverScreen'}
+function positionCoverHotspots(){const cover=$('#coverScreen');if(!cover)return;const image=new Image();image.onload=()=>{const bounds=cover.getBoundingClientRect();const scale=Math.max(bounds.width/image.naturalWidth,bounds.height/image.naturalHeight);const offsetX=(bounds.width-image.naturalWidth*scale)/2;const offsetY=(bounds.height-image.naturalHeight*scale)/2;[['help',.31,.81,.18,.14],['start',.48,.81,.20,.14]].forEach(([name,left,top,width,height])=>{const hotspot=$(`.cover-hotspot.${name}`);hotspot.style.left=(offsetX+image.naturalWidth*left*scale)+'px';hotspot.style.top=(offsetY+image.naturalHeight*top*scale)+'px';hotspot.style.width=image.naturalWidth*width*scale+'px';hotspot.style.height=image.naturalHeight*height*scale+'px';});};image.src='Unjumble Game 표지.png';}
 
 function showScreen(id,recordHistory=true){
  closeModal();hideSubPeek();
@@ -623,6 +626,7 @@ function showScreen(id,recordHistory=true){
  $$('.screen').forEach(s=>s.classList.remove('active'));
  $('#'+id).classList.add('active');
  document.body.classList.toggle('cover-active',id==='coverScreen');
+ positionCoverHotspots();
  playBgm(id==='gameScreen'||id==='resultScreen'?'game':'intro');
  window.scrollTo({top:0,behavior:'smooth'});
  updateNavButtons();
@@ -641,7 +645,7 @@ function toggleAllSubs(){if(!state.categoryChosen)return;const cat=currentCatego
 function goToCategory(){showScreen('categoryScreen');renderCategories();}
 function backToCategory(){if(state.categoryChosen){showScreen('subScreen');renderSubs()}else{showScreen('categoryScreen');renderCategories()}}
 function goHome(){closeModal();showScreen('coverScreen')}
-function confirmExitGame(action){openConfirm('게임을 종료할까요?','지금 나가면 풀던 문제가 사라져요.<img class="exit-owl" src="부엉이.png" alt="부엉이">',action,'확인','계속하기')}
+function confirmExitGame(action){openConfirm('게임을 종료할까요?','지금 나가면 풀던 문제가 사라져요.<img class="exit-owl" src="부엉이.png" alt="부엉이">',action,'나가기','계속하기')}
 function confirmHome(){confirmExitGame(goHome)}
 function confirmBackToCategory(){confirmExitGame(backToCategory)}
 
@@ -662,15 +666,15 @@ function reshuffleCurrent(){if(state.answered)return;let words=$$('#wordBoard .w
 function useHint(){if(state.hintUsed||state.answered)return;openConfirm('힌트를 볼까요? 💡',`점수가 3점 줄어듭니다.`,()=>{state.hintUsed=true;$('#hintBtn').disabled=true;$('#hintBox').innerHTML=`<b>뜻:</b> ${currentQuestion().hint}`;$('#hintBox').classList.add('show');closeModal()},'힌트 보기');}
 function ttsFileName(sentence){return sentence.replace(/[.?!]+$/,'')+'.mp3'}
 function playTts(sentence,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!state.voiceOn){resume();return;}const audio=new Audio(`unjumble TTS/${encodeURIComponent(ttsFileName(sentence))}`);audio.volume=1;audio.onended=resume;audio.onerror=()=>speakWithBrowser(sentence,resumeBgm);audio.play().catch(()=>speakWithBrowser(sentence,resumeBgm));}
-function playSentenceAfterCorrectSound(sentence){if(currentScreenId()!=='gameScreen')return;const resumeBgm=BGM.on;bgmStop();const sound=$('#correctVoice');sound.volume=1;let started=false;const startTts=()=>{if(started)return;started=true;playTts(sentence,resumeBgm)};sound.currentTime=0;sound.onended=startTts;const playback=sound.play();if(playback)playback.catch(startTts);}
-function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(0,10-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장을 완성했어요. +'+earned+'점',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;state.score-=5;$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('wrongVoice');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`순서를 다시 살펴봐요. (-5점, 기회는 ${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');speak(item.sentence);openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
+function playSentenceAfterCorrectSound(sentence){if(currentScreenId()!=='gameScreen')return;const resumeBgm=BGM.on;bgmStop();const sound=$('#correctVoice');sound.volume=1;sound.currentTime=0;const playback=sound.play();playTts(sentence,resumeBgm);if(playback)playback.catch(()=>{});}
+function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(0,10-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장을 완성했어요.',`<div class="correct-answer-card">${item.sentence}</div><p class="answer-meaning"><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;state.score-=5;$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('wrongVoice');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`순서를 다시 살펴봐요. (-5점, 기회는 ${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');speak(item.sentence);openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function nextQuestion(){closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
-function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div style="margin-bottom:10px"><b style="font-size:18px">${i+1}. ${r.ok?'정답':'다시 보기'}</b></div><div><span style="font-size:20px;color:#4a3476;font-weight:bold;display:block;margin-bottom:8px">${r.sentence} - ${r.meaning}</span></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')">듣기</button></div>`).join('');makeConfetti();}
+function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><span style="font-size:20px;color:#4a3476;font-weight:bold;display:block;margin-bottom:8px">${r.sentence} - ${r.meaning}</span></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
-function openHelp(source='nav'){$('#modalTitle').textContent='How to Play 🧩';$('#modalBody').innerHTML=`<section class="how-section"><h3>🎯 오늘의 미션</h3><p>흩어진 단어 카드를 바른 순서로 놓아 영어 문장을 완성해요.</p></section><section class="how-section"><h3>✨ 게임 방법</h3><ul class="how-list"><li>🗂️ 마음에 드는 주제와 문장을 골라요.</li><li>🧩 단어 카드를 드래그하거나 화살표 키로 옮겨요.</li><li>✅ 완성한 문장을 제출하고 소리 내어 함께 읽어요.</li></ul></section><section class="how-section"><h3>🌟 점수 규칙</h3><ul class="how-list"><li>정답일 때 +10점</li><li>오답일 때 -5점</li><li>힌트 사용 시 -3점</li></ul></section>`;$('#modalActions').innerHTML=source==='intro'?'<button class="secondary-btn" onclick="closeModal()">닫기</button><button class="primary-btn" onclick="goToCategory()">Game Start</button>':'';modalMode='help';openModal();$('.modal-close').style.display=source==='intro'?'none':'flex';}
+function openHelp(source='nav'){$('#modalTitle').textContent='How to Play';$('#modalBody').innerHTML=`<section class="how-section"><h3>오늘의 미션</h3><p>흩어진 단어 카드를 바른 순서로 놓아 영어 문장을 완성해요.</p></section><section class="how-section"><h3>게임 방법</h3><ul class="how-list"><li>마음에 드는 주제와 문장을 골라요.</li><li>단어 카드를 드래그하거나 화살표 키로 옮겨요.</li><li>완성한 문장을 제출하고 소리 내어 함께 읽어요.</li></ul></section><section class="how-section"><h3>점수 규칙</h3><ul class="how-list"><li>정답일 때 +10점</li><li>오답일 때 -5점</li><li>힌트 사용 시 -3점</li></ul></section>`;$('#modalActions').innerHTML=source==='intro'?'<button class="secondary-btn" onclick="closeModal()">닫기</button><button class="primary-btn" onclick="goToCategory()">Game Start</button>':'';modalMode='help';openModal();$('.modal-close').style.display=source==='intro'?'none':'flex';}
 function toggleSfx(){state.sfxOn=!state.sfxOn;updateUtilityButtons();}
 function openFeedback(title,body,ok){modalMode='answer';$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;$('#modalActions').innerHTML=`<button class="primary-btn" onclick="nextQuestion()">${state.round===state.questions.length-1?'결과 보기 🎉':'다음 ➜'}</button>`;const closeBtn=$('.modal-close');closeBtn.style.display='none';openModal();}
 function openConfirm(title,body,yesFn,yesText='네',noText='아니요'){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=`<p>${body}</p>`;window.__confirmAction=yesFn;$('#modalActions').innerHTML=`<button class="secondary-btn" onclick="closeModal()">${noText}</button><button class="primary-btn" onclick="runConfirm()">${yesText}</button>`;modalMode='confirm';const closeBtn=$('.modal-close');closeBtn.style.display='flex';openModal();}
@@ -716,6 +720,9 @@ $('#wordBoard').addEventListener('keydown',e=>{const card=e.target.closest('.wor
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['+','-','0'].includes(e.key))e.preventDefault();});
 window.addEventListener('wheel',e=>{if(e.ctrlKey)e.preventDefault()},{passive:false});
 document.addEventListener('contextmenu',e=>e.preventDefault());
+window.addEventListener('resize',positionCoverHotspots);
+window.visualViewport?.addEventListener('resize',positionCoverHotspots);
+window.addEventListener('load',positionCoverHotspots);
 
 renderCategories();updateUtilityButtons();
 </script>
