@@ -114,7 +114,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:5px solid rgba(76,63,152,.
 .question-top{display:grid;grid-template-columns:1fr;gap:10px;align-items:center;text-align:center}
 .prompt{display:grid;gap:8px;justify-items:center}
 .topic-line{font-size:clamp(18px,2.2vw,22px);margin:0;color:#8b6f9e;background:#fff2cf;border-radius:999px;padding:8px 16px;box-shadow:0 5px 12px rgba(72,43,91,.08)}
-.prompt h2{font-size:clamp(31px,4.4vw,50px);margin:0 0 6px}
+.prompt h2{font-weight:normal;font-synthesis:none;font-size:clamp(31px,4.4vw,50px);margin:0 0 6px}
 .prompt p{font-size:clamp(22px,2.3vw,27px);margin:0;color:#755f89}
 .answer-label{text-align:center;font-size:22px;color:#7a6490}
 .word-board{min-height:150px;border:4px dashed #c6a2d5;border-radius:28px;background:linear-gradient(180deg,#fff,#fff9ed);display:flex;align-content:center;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;padding:24px;transition:.2s}
@@ -401,7 +401,7 @@ body.cover-active .nav-btn-group:last-child .nav-btn-circle:nth-child(4){backgro
         </div>
         <div class="modal-actions">
           <button class="primary-btn" onclick="replaySame()">같은 주제로 다시</button>
-          <button class="secondary-btn" onclick="backToCategory()">다른 주제 고르기</button>
+          <button class="secondary-btn" onclick="goToCategory()">다른 주제 고르기</button>
           <button class="secondary-btn" onclick="goHome()">처음으로</button>
         </div>
       </section>
@@ -526,7 +526,7 @@ const DATA=[
       {"sentence":"Can I have some water?","hint":"물을 좀 마셔도 되나요?","scene":""},
       {"sentence":"I'd like chicken, please.","hint":"저는 치킨으로 할게요.","scene":""},
       {"sentence":"The soup is too hot.","hint":"수프가 너무 뜨거워요.","scene":""},
-      {"sentence":"Here is your lunch menu.","hint":"여기 점심 메뉴가 있어요.","scene":""}
+      {"sentence":"Here's your lunch menu.","hint":"여기 점심 메뉴가 있어요.","scene":""}
     ]},
     {"id":"shopping","name":"쇼핑","emoji":"","questions":[
       {"sentence":"How much is this shirt?","hint":"이 셔츠는 얼마예요?","scene":""},
@@ -624,6 +624,7 @@ const navHistory=[],navFuture=[];
 let dragState=null;
 let modalMode=null;
 const BGM={on:true,key:'intro',intro:null,game:null};
+let sentencePlayback=null;
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -635,7 +636,7 @@ function positionCoverHotspots(){const cover=$('#coverScreen');if(!cover)return;
 
 function showScreen(id,recordHistory=true){
  closeModal();hideSubPeek();
- if('speechSynthesis'in window)window.speechSynthesis.cancel();
+ stopSentencePlayback();
  const activeCurrent=currentScreenId();
  if(recordHistory&&activeCurrent&&activeCurrent!==id){navHistory.push(activeCurrent);navFuture.length=0;}
  $$('.screen').forEach(s=>s.classList.remove('active'));
@@ -680,12 +681,21 @@ function reshuffleCurrent(){if(state.answered)return;let words=$$('#wordBoard .w
 
 function useHint(){if(state.hintUsed||state.answered)return;openConfirm('힌트를 볼까요? 💡',`점수가 3점 줄어듭니다.`,()=>{state.hintUsed=true;$('#hintBtn').disabled=true;$('#hintBox').innerHTML=`<b>뜻:</b> ${currentQuestion().hint}`;$('#hintBox').classList.add('show');closeModal()},'힌트 보기');}
 function ttsFileName(sentence){return sentence.replace(/[.?!]+$/,'')+'.mp3'}
-function playTts(sentence,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!state.voiceOn){resume();return;}const audio=new Audio(`unjumble TTS/${encodeURIComponent(ttsFileName(sentence))}`);audio.volume=1;audio.onended=resume;audio.onerror=()=>speakWithBrowser(sentence,resumeBgm);audio.play().catch(()=>speakWithBrowser(sentence,resumeBgm));}
-function playSentenceAfterCorrectSound(sentence){if(currentScreenId()!=='gameScreen')return;const resumeBgm=BGM.on;bgmStop();const sound=$('#correctVoice');sound.volume=1;sound.currentTime=0;const playback=sound.play();playTts(sentence,resumeBgm);if(playback)playback.catch(()=>{});}
-function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(0,10-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장을 완성했어요.',`<div class="correct-answer-card">${item.sentence}</div><p class="answer-meaning"><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;state.score-=5;$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('wrongVoice');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`순서를 다시 살펴봐요. (-5점, 기회는 ${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');speak(item.sentence);openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
+function stopSentencePlayback(){const playback=sentencePlayback;sentencePlayback=null;if(playback?.audio){playback.audio.onended=null;playback.audio.onerror=null;playback.audio.pause();}if('speechSynthesis'in window)window.speechSynthesis.cancel();}
+function playTts(sentence){
+ stopSentencePlayback();
+ if(!state.voiceOn){bgmStart();return;}
+ const playback={audio:null};sentencePlayback=playback;bgmStop();
+ const resume=()=>{if(sentencePlayback!==playback)return;sentencePlayback=null;bgmStart();};
+ let fallbackStarted=false;
+ const fallback=()=>{if(sentencePlayback!==playback||fallbackStarted)return;fallbackStarted=true;playback.audio.pause();speakWithBrowser(sentence,resume);};
+ const audio=new Audio('unjumble TTS/'+encodeURIComponent(ttsFileName(sentence)));playback.audio=audio;audio.volume=1;audio.onended=resume;audio.onerror=fallback;audio.play().catch(fallback);
+}
+function playSentenceAfterCorrectSound(sentence){if(currentScreenId()!=='gameScreen')return;playEffect('correctVoice');playTts(sentence);}
+function submitAnswer(){if(state.answered)return;const item=currentQuestion();const answer=arrangedSentence();if(matchesAnswer(answer,item.sentence)){state.answered=true;const earned=Math.max(0,10-(state.hintUsed?3:0));state.score+=earned;state.correctCount++;state.review.push({ok:true,sentence:item.sentence,meaning:item.hint});$('#scoreChip').textContent=`⭐ ${state.score}점`;playSentenceAfterCorrectSound(item.sentence);openFeedback('멋지게 문장을 완성했어요.',`<div class="correct-answer-card">${item.sentence}</div><p class="answer-meaning"><b>뜻:</b> ${item.hint}</p><p style="font-size:20px;color:#8b50d8"><b>+${earned}점 획득!</b></p>`,true);}else{state.attempts++;state.score=Math.max(0,state.score-5);$('#scoreChip').textContent=`⭐ ${state.score}점`;playEffect('wrongVoice');const board=$('#wordBoard');board.classList.remove('shake');void board.offsetWidth;board.classList.add('shake');if(state.attempts<3){const remaining=3-state.attempts;$('#feedbackToast').textContent=`순서를 다시 살펴봐요. (-5점, 기회는 ${remaining}번 남았어요)`;}else{state.answered=true;state.review.push({ok:false,sentence:item.sentence,meaning:item.hint});$('#submitBtn').disabled=true;$('#hintBtn').disabled=true;$('#answerReveal').innerHTML=`정답: <b>${item.sentence}</b><br><b>뜻:</b> ${item.hint}`;$('#answerReveal').classList.add('show');speak(item.sentence);openFeedback('괜찮아요! 다시 배우면 돼요 🌱',`<div class="correct-answer-card">${item.sentence}</div><p><b>뜻:</b> ${item.hint}</p>`,false);}}}
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
-function nextQuestion(){closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
+function nextQuestion(){stopSentencePlayback();bgmStart();closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
 function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><div class="review-sentence">${r.sentence}</div><div class="review-meaning">${r.meaning}</div></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
@@ -702,8 +712,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop')
 function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.volume=1;a.currentTime=0;a.play()}catch(e){}}
 function getEnglishVoice(){const voices=speechSynthesis.getVoices();return voices.find(voice=>/^en-us$/i.test(voice.lang))||voices.find(voice=>/^en/i.test(voice.lang))||null}
 if('speechSynthesis'in window)speechSynthesis.addEventListener('voiceschanged',getEnglishVoice);
-function speak(text,resumeBgm=false){playTts(text,resumeBgm)}
-function speakWithBrowser(text,resumeBgm=false){const resume=()=>{if(resumeBgm&&BGM.on)bgmStart()};if(!('speechSynthesis'in window)){resume();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const voice=getEnglishVoice();u.lang='en-US';if(voice)u.voice=voice;u.rate=.82;u.pitch=1.08;u.volume=1;u.onend=resume;u.onerror=resume;try{speechSynthesis.speak(u)}catch(e){resume()}}
+function speak(text){playTts(text)}
+function speakWithBrowser(text,resume=()=>{}){if(!('speechSynthesis'in window)){resume();return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const voice=getEnglishVoice();u.lang='en-US';if(voice)u.voice=voice;u.rate=.82;u.pitch=1.08;u.volume=1;u.onend=resume;u.onerror=resume;try{speechSynthesis.speak(u)}catch(e){resume()}}
 function toggleVoice(){state.voiceOn=!state.voiceOn;updateUtilityButtons()}
 function updateUtilityButtons(){$$('#sfx-toggle-icon,#sfx-toggle-icon-2,#sfx-toggle-icon-3,#sfx-toggle-icon-4,#sfx-toggle-icon-5').forEach(el=>{if(!el)return;el.className=state.sfxOn?'fa-solid fa-bell':'fa-solid fa-bell-slash';});$$('#music-toggle-icon,#music-toggle-icon-2,#music-toggle-icon-3,#music-toggle-icon-4,#music-toggle-icon-5').forEach(el=>{if(!el)return;el.className=BGM.on?'fa-solid fa-music':'fa-solid fa-volume-xmark';});$$('.nav-btn-circle[onclick="toggleSfx()"]').forEach(btn=>{btn.classList.toggle('muted',!state.sfxOn);btn.setAttribute('aria-pressed',String(!state.sfxOn));});$$('.nav-btn-circle[onclick="toggleBgm()"]').forEach(btn=>{btn.classList.toggle('muted',!BGM.on);btn.setAttribute('aria-pressed',String(!BGM.on));});$$('#fullscreen-toggle-icon,#fullscreen-toggle-icon-2,#fullscreen-toggle-icon-3,#fullscreen-toggle-icon-4,#fullscreen-toggle-icon-5').forEach(el=>{if(!el)return;el.className=document.fullscreenElement?'fa-solid fa-compress':'fa-solid fa-expand';});}
 async function toggleFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();updateUtilityButtons()}catch(e){}}
@@ -717,7 +727,7 @@ $('#subPeek').addEventListener('mouseenter',()=>clearTimeout(peekTimer));
 $('#subPeek').addEventListener('mouseleave',scheduleHidePeek);
 
 function bgmEl(key=BGM.key){if(!BGM[key]){BGM[key]=$('#bgm-'+key);if(BGM[key])BGM[key].volume=.18;}return BGM[key]}
-function playBgm(key){const changed=BGM.key!==key;BGM.key=key;['intro','game'].forEach(track=>{const audio=bgmEl(track);if(audio&&track!==key)audio.pause();});const audio=bgmEl(key);if(!audio||!BGM.on)return;if(changed)audio.currentTime=0;audio.play().catch(()=>{})}
+function playBgm(key){const changed=BGM.key!==key;BGM.key=key;['intro','game'].forEach(track=>{const audio=bgmEl(track);if(audio&&track!==key)audio.pause();});const audio=bgmEl(key);if(!audio||!BGM.on||sentencePlayback||document.hidden)return;if(changed)audio.currentTime=0;audio.play().catch(()=>{})}
 function bgmStart(){playBgm(BGM.key)}
 function bgmStop(){const audio=bgmEl();if(audio)audio.pause()}
 function toggleBgm(){BGM.on=!BGM.on;if(BGM.on)bgmStart();else ['intro','game'].forEach(track=>bgmEl(track)?.pause());updateUtilityButtons();}
