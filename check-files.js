@@ -67,6 +67,9 @@ files.forEach(f => onDisk.set(path.relative(ROOT, f).replace(/\\/g, '/').toLower
 for (const htmlPath of htmlFiles) {
   const rel = path.relative(ROOT, htmlPath).replace(/\\/g, '/');
   const src = fs.readFileSync(htmlPath, 'utf8');
+  // 참조 경로는 HTML 파일이 있는 폴더를 기준으로 풉니다
+  const htmlDir = path.posix.dirname(rel);
+  const resolveRef = r => path.posix.normalize(path.posix.join(htmlDir, r));
   console.log('\n' + C.bold('━'.repeat(58)));
   console.log(C.bold('  ' + rel) + C.dim('  (' + Math.round(src.length / 1024) + 'KB)'));
   console.log(C.bold('━'.repeat(58)));
@@ -86,11 +89,11 @@ for (const htmlPath of htmlFiles) {
 
   const missing = [], caseWrong = [];
   for (const r of refs) {
-    const key = r.toLowerCase();
+    const full = resolveRef(r);
+    const key = full.toLowerCase();
     if (onDisk.has(key)) {
       const actual = onDisk.get(key);
-      if (actual !== r && path.basename(actual) !== path.basename(r)) continue;
-      if (actual !== r) caseWrong.push(r + '  →  실제 파일: ' + actual);
+      if (actual !== full) caseWrong.push(r + '  →  실제 파일: ' + actual);
     } else {
       missing.push(r);
     }
@@ -118,7 +121,7 @@ for (const htmlPath of htmlFiles) {
     if (!s2 || /^data:/.test(s2)) continue;
     const isLazy = /loading\s*=\s*["']lazy/.test(tag) || /preload\s*=\s*["'](none|metadata)/.test(tag);
     if (!isLazy) {
-      const f = onDisk.get(s2.replace(/^\.\//, '').toLowerCase());
+      const f = onDisk.get(resolveRef(s2).toLowerCase());
       if (f) eager.push({ name: s2, bytes: fs.statSync(path.join(ROOT, f)).size });
     }
   }
