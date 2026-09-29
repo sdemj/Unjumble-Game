@@ -299,6 +299,13 @@ body{padding-top:0}
 body:has(#modalBackdrop.show) #top-nav-bar{visibility:hidden}
 /* 휴대폰 세로 안내는 상단바보다 위에 */
 #rotate-overlay{z-index:2147483600 !important}
+/* 정답·오답 팝업: 제목 아래 글자(문장·뜻·점수)도 제목(52px)과 같은 크기로 */
+#app .modal .correct-answer-card,#app .modal #modalBody:has(.correct-answer-card) p{font-size:52px!important;line-height:1.35}
+/* 결과 화면 문장 복습: 앞 절반은 왼쪽, 나머지는 오른쪽 칸 (행 수는 finishGame 에서 정한다) */
+#app #reviewList{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:column;column-gap:24px}
+/* 소주제 미리보기: 문장 글자를 소주제 영어 이름(First Greetings, 32px)과 같게 */
+#app #subPeek{width:760px;max-height:none}
+#app .peek-list li{font-size:32px}
 </style>
 <link rel="stylesheet" href="topnav.css">
 </head>
@@ -805,7 +812,7 @@ function submitAnswer(){if(state.answered)return;const item=currentQuestion();co
 
 function escapeForAttr(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 function nextQuestion(){stopSentencePlayback();bgmStart();closeModal();if(state.round<state.questions.length-1){state.round++;renderQuestion()}else finishGame()}
-function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><div class="review-sentence">${r.sentence}</div><div class="review-meaning">${r.meaning}</div></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
+function finishGame(){$('#progressBar').style.width='100%';playEffect('completeVoice');showScreen('resultScreen');const max=state.questions.length*10;const pct=max?state.score/max:0;$('#resultTitle').textContent=pct>=.9?'문장 박사!':pct>=.65?'정말 잘했어요!':'끝까지 도전했어요!';$('#resultScore').textContent=`${state.score}점`;$('#resultCorrect').textContent=`정답 ${state.correctCount}/${state.questions.length}`;$('#resultCategory').textContent=currentCategory().name;$('#reviewList').style.gridTemplateRows=`repeat(${Math.ceil(state.review.length/2)},auto)`;$('#reviewList').innerHTML=state.review.map((r,i)=>`<div class="review-item ${r.ok?'ok':'no'}"><div class="review-status">${r.ok?'정답':'다시<br>보기'}</div><div><div class="review-sentence">${r.sentence}</div><div class="review-meaning">${r.meaning}</div></div><button type="button" class="review-play" title="문장 듣기" aria-label="${i+1}번 문장 듣기" onclick="speak('${escapeForAttr(r.sentence)}')"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button></div>`).join('');makeConfetti();}
 function makeConfetti(){const c=$('#confetti');c.innerHTML='';const colors=['#ff5aa5','#a26af2','#55b9ea','#ffd04a','#6bd1b7'];for(let i=0;i<45;i++){const x=document.createElement('i');x.style.setProperty('--x',Math.random()*100+'%');x.style.setProperty('--d',(2.6+Math.random()*3.5)+'s');x.style.setProperty('--delay',(-Math.random()*5)+'s');x.style.setProperty('--c',colors[i%colors.length]);c.appendChild(x)}}
 
 function openHelp(source='nav'){$('#modalTitle').textContent='How to Play';$('#modalBody').innerHTML=`<section class="how-section"><h3>오늘의 미션</h3><p>흩어진 단어 카드를 바른 순서로 놓아 영어 문장을 완성해요.</p></section><section class="how-section"><h3>게임 방법</h3><ul class="how-list"><li>주제를 고르고 풀고 싶은 소주제를 선택해요. 선택한 문장 중 최대 10문장이 무작위로 나와요.</li><li>단어 카드를 드래그하거나 화살표 키로 옮겨요. 🔀 다시 섞기로 카드를 새로 섞을 수 있어요.</li><li>✅ 제출하기를 누르면 정답을 확인해요. 정답이면 문장을 들려줘요. 소리 내어 함께 읽어요.</li><li>한 문장에 3번까지 도전할 수 있어요. 3번 모두 틀리면 정답과 뜻을 알려줘요.</li></ul></section><section class="how-section"><h3>점수 규칙</h3><ul class="how-list"><li>정답일 때 +10점</li><li>오답일 때 -5점</li><li>💡 힌트(뜻 보기)를 쓰면 바로 -3점</li><li>점수는 0점 아래로 내려가지 않아요.</li></ul></section>`;$('#modalActions').innerHTML=source==='intro'?'<button class="secondary-btn" onclick="closeModal()">닫기</button><button class="primary-btn" onclick="goToCategory()">Game Start</button>':'';modalMode='help';openModal();$('.modal-close').style.display=source==='intro'?'none':'flex';}
