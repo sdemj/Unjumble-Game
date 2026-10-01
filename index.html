@@ -297,6 +297,8 @@ body{padding-top:0}
 #app .drag-ghost{position:absolute}
 /* 팝업이 떠 있는 동안은 상단바를 감춘다 */
 body:has(#modalBackdrop.show) #top-nav-bar{visibility:hidden}
+/* "화면을 가로로 돌려 주세요" 안내창이 떠 있는 동안은 상단바를 감춘다 */
+body.rotate-open #top-nav-bar{visibility:hidden}
 /* 휴대폰 세로 안내는 상단바보다 위에 */
 #rotate-overlay{z-index:2147483600 !important}
 /* 정답·오답 팝업: 제목 아래 글자(문장·뜻·점수)도 제목(52px)과 같은 크기로 */
@@ -346,7 +348,9 @@ html,body{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjus
         return !dismissed && isPhoneSized() && window.innerHeight > window.innerWidth;
     }
     function updateRotateOverlay() {
-        overlay.style.display = shouldShow() ? 'flex' : 'none';
+        var show = shouldShow();
+        overlay.style.display = show ? 'flex' : 'none';
+        document.body.classList.toggle('rotate-open', show); // 안내창이 떠 있는 동안 상단바 숨김
     }
     window.dismissRotateOverlay = function () {
         dismissed = true;
