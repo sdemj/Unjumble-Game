@@ -837,7 +837,61 @@ function closeModal(){modalMode=null;$('.modal-close').style.display='flex';$('#
 $('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop'&&modalMode!=='answer')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modalBackdrop').classList.contains('show')&&modalMode!=='answer')closeModal()});
 
-function playEffect(id){if(!state.sfxOn)return;const a=$('#'+id);try{a.volume=1;a.currentTime=0;a.play()}catch(e){}}
+/* 효과음(정답·오답·완료): 아이패드(사파리·크롬)에서 <audio> 가 화면 잠금·앱 전환 뒤 소리 없이 멈춰
+   새로고침해야 다시 나던 문제 → Web Audio 로 한 번 불러 두고 매번 새로 재생한다.
+   잠금·앱 전환으로 멈춘 오디오는 다음 터치 때 깨우고, 그래도 안 깨어나면 새로 만든다.
+   Web Audio 를 쓸 수 없을 때(파일로 직접 연 경우 등)는 예전처럼 <audio> 로 재생한다 */
+const SFX=(function(){
+  const FILES={correctVoice:'정답.mp3',wrongVoice:'오답.mp3',completeVoice:'완료.mp3'};
+  const AC=window.AudioContext||window.webkitAudioContext;
+  const buffers={};let ctx=null,loading=null,needCheck=false;
+  // iOS 17+: 무음 모드에서도 효과음이 나도록 '재생' 앱으로 알린다
+  try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}
+  function newCtx(){try{if(ctx&&ctx.state!=='closed')ctx.close().catch(()=>{});}catch(e){}ctx=AC?new AC():null;return ctx;}
+  function decode(c,data){return new Promise((res,rej)=>{const p=c.decodeAudioData(data,res,rej);if(p&&p.then)p.then(res,rej);});}
+  function load(){
+    if(loading||!ctx||location.protocol==='file:')return loading;
+    loading=Promise.all(Object.entries(FILES).map(([id,f])=>fetch(encodeURI(f)).then(r=>{if(!r.ok)throw new Error(f);return r.arrayBuffer();}).then(d=>decode(ctx,d)).then(b=>{buffers[id]=b;}).catch(()=>{})));
+    return loading;
+  }
+  // 터치·클릭할 때마다: 오디오가 멈춰 있으면 깨운다 (iOS 는 사용자 동작 안에서만 깨울 수 있다)
+  function wake(){
+    if(!AC)return;
+    if(!ctx)newCtx();
+    if(ctx.state!=='running'){
+      const c=ctx;c.resume().catch(()=>{});
+      // 잠금·앱 전환 뒤 'interrupted' 등에서 못 빠져나오면 새로 만든다 (불러 둔 소리는 그대로 쓴다)
+      if(needCheck)setTimeout(()=>{if(ctx===c&&c.state!=='running'){newCtx();try{ctx.resume();}catch(e){}}},250);
+    }
+    needCheck=false;
+    try{const s=ctx.createBufferSource();s.buffer=ctx.createBuffer(1,1,22050);s.connect(ctx.destination);s.start(0);}catch(e){}
+    load();
+  }
+  function playElement(id){
+    const a=$('#'+id);if(!a)return;
+    try{a.volume=1;a.currentTime=0;}catch(e){}
+    const p=a.play();
+    // 멈춘 <audio> 는 load() 로 되살려 다음번엔 나오게 한다
+    if(p&&p.catch)p.catch(()=>{try{a.load();}catch(e){}});
+  }
+  function play(id){
+    const b=buffers[id];
+    if(!ctx||!b){playElement(id);return;}
+    const c=ctx,go=()=>{const s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0);};
+    if(c.state==='running'){go();return;}
+    let done=false;
+    c.resume().then(()=>{if(!done&&c.state==='running'){done=true;go();}}).catch(()=>{});
+    setTimeout(()=>{if(!done){done=true;playElement(id);}},200);
+  }
+  ['touchend','pointerup','click','keydown'].forEach(t=>document.addEventListener(t,wake,{capture:true,passive:true}));
+  // 화면 잠금·다른 앱에서 돌아오면 다음 터치 때 오디오 상태를 다시 확인한다 (<audio> 효과음도 초기화)
+  function back(){needCheck=true;Object.keys(FILES).forEach(id=>{const a=$('#'+id);if(a&&a.paused){try{a.load();}catch(e){}}});}
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)back();});
+  window.addEventListener('pageshow',e=>{if(e.persisted)back();});
+  window.addEventListener('focus',()=>{needCheck=true;});
+  return {play,wake,state:()=>ctx?ctx.state:'none',loaded:()=>Object.keys(buffers)};
+})();
+function playEffect(id){if(!state.sfxOn)return;SFX.play(id);}
 function getEnglishVoice(){const voices=speechSynthesis.getVoices();return voices.find(voice=>/^en-us$/i.test(voice.lang))||voices.find(voice=>/^en/i.test(voice.lang))||null}
 if('speechSynthesis'in window)speechSynthesis.addEventListener('voiceschanged',getEnglishVoice);
 function speak(text){playTts(text)}
